@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120" fill="none">
+  <!-- Monogram Mark -->
+  <g fill="#0B2A4A">
+    <!-- Y -->
+    <path d="M 24 24 L 54 68 L 54 96 L 68 96 L 68 68 L 98 24 L 82 24 L 61 57 L 40 24 Z" />
+    <!-- First C -->
+    <path d="M 152 38 C 144 26 130 20 114 20 C 88 20 70 38 70 60 C 70 82 88 100 114 100 C 130 100 144 94 152 82 L 140 73 C 134 81 124 86 114 86 C 96 86 84 74 84 60 C 84 46 96 34 114 34 C 124 34 134 39 140 47 Z" />
+    <!-- Second C -->
+    <path d="M 212 38 C 204 26 190 20 174 20 C 148 20 130 38 130 60 C 130 82 148 100 174 100 C 190 100 204 94 212 82 L 200 73 C 194 81 184 86 174 86 C 156 86 144 74 144 60 C 144 46 156 34 174 34 C 184 34 194 39 200 47 Z" />
+  </g>
+  <!-- Thin divider rule -->
+  <line x1="236" y1="24" x2="236" y2="96" stroke="#D6D6D1" stroke-width="1.5" />
+  <!-- Editorial Serif Wordmark Typography -->
+  <text x="256" y="50" font-family="'Source Serif 4', Georgia, serif" font-size="22" font-weight="600" letter-spacing="1.5" fill="#0B2A4A">YALGAR</text>
+  <text x="256" y="74" font-family="'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="600" letter-spacing="3" fill="#1A1A1A">CONSULTING COMPANY</text>
+  <text x="256" y="93" font-family="'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif" font-size="10.5" font-weight="400" letter-spacing="1.5" fill="#4D4D4D">SECURITY • SUPPLY CHAIN • OPERATIONS</text>
+</svg>

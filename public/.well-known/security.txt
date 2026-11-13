@@ -1,0 +1,5 @@
+Contact: mailto:inqury@yalgar.com
+Expires: 2027-11-13T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://yalgar.com/.well-known/security.txt
+Policy: https://yalgar.com/privacy
