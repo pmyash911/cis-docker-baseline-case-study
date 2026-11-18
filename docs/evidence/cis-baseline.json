@@ -1,0 +1,23 @@
+{
+  "tool": "ycc-cis-audit",
+  "version": "1.0.0",
+  "generatedAt": "2026-11-18T23:55:48Z",
+  "host": {"hostname": "unknown", "os": "Linux", "kernel": "6.12.114", "docker": "29.9.3"},
+  "summary": {"pass": 10, "fail": 1, "warn": 0, "na": 3, "total": 14},
+  "checks": [
+    {"id": "HOST 000", "title": "Docker daemon reachable", "level": "Info", "status": "PASS", "evidence": "server 29.9.3 on Linux/6.12.114"},
+    {"id": "CIS 1.1.1", "title": "Host filesystem auditing (auditd)", "level": "Level 1", "status": "N/A", "evidence": "auditd is not installed"},
+    {"id": "CIS 1.1.2", "title": "Separate partition for /var/lib/docker", "level": "Level 2", "status": "PASS", "evidence": "mounted at /var/lib/docker"},
+    {"id": "CIS 1.1.3", "title": "Daemon config file permissions", "level": "Level 1", "status": "N/A", "evidence": "no /etc/docker/daemon.json on this host"},
+    {"id": "CIS 2.1.4", "title": "Default ulimit enforcement", "level": "Level 1", "status": "FAIL", "evidence": "default-ulimits is missing from daemon config"},
+    {"id": "CIS 2.2.1", "title": "Remote API protected by TLS", "level": "Level 1", "status": "PASS", "evidence": "no remote TCP host configured"},
+    {"id": "CIS 3.3.6", "title": "Docker socket permissions", "level": "Level 1", "status": "PASS", "evidence": "/var/run/docker.sock is 660"},
+    {"id": "CIS 3.1.1", "title": "docker.service file permissions", "level": "Level 1", "status": "PASS", "evidence": "/usr/lib/systemd/system/docker.service is 644"},
+    {"id": "CIS 4.1.2", "title": "Containers run as non-root", "level": "Level 1", "status": "PASS", "evidence": "all running containers declare a non-root user"},
+    {"id": "CIS 5.1.1", "title": "AppArmor profile enforced", "level": "Level 1", "status": "N/A", "evidence": "AppArmor not available on this kernel"},
+    {"id": "CIS 5.2.2", "title": "Read-only root filesystem", "level": "Level 1", "status": "PASS", "evidence": "all containers use a read-only root filesystem"},
+    {"id": "CIS 5.2.3", "title": "Privileged containers", "level": "Level 1", "status": "PASS", "evidence": "no container runs privileged"},
+    {"id": "CIS 5.1.5", "title": "Memory and CPU limits", "level": "Level 1", "status": "PASS", "evidence": "all containers declare memory and CPU limits"},
+    {"id": "CIS 5.2.1", "title": "Docker socket not mounted into containers", "level": "Level 2", "status": "PASS", "evidence": "no container mounts the host docker socket"}
+  ]
+}
