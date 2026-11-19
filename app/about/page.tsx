@@ -38,7 +38,6 @@ export const metadata: Metadata = {
 
 const background = [
   { label: "Name", value: siteConfig.person },
-  { label: "Based in", value: siteConfig.location },
   { label: "Founded", value: siteConfig.founded },
   { label: "Degrees and credentials", value: siteConfig.credentials },
 ];

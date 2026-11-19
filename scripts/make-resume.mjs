@@ -35,9 +35,8 @@ const CHROME_CANDIDATES = [
 
 const FACTS = {
   name: "Yash Patel",
-  headline: "Supply Chain Operations & Security | Ex-Amazon",
-  location: "Dallas–Fort Worth Metroplex",
-  email: "pmyash911@gmail.com",
+  headline: "Cybersecurity | Ex-Amazon",
+  email: "inquiry@yalgar.com",
   linkedin: "linkedin.com/in/yash-patelycc",
   github: "github.com/pmyash911",
   website: "yalgar.com",
@@ -193,7 +192,7 @@ li::marker { color: var(--navy); }
     <h1>${esc(FACTS.name)}</h1>
     <div class="role">${esc(FACTS.headline)}</div>
     <div class="contact">
-      ${esc(FACTS.location)} &middot; ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)} &middot; ${esc(FACTS.website)}
+      ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)} &middot; ${esc(FACTS.website)}
     </div>
     <hr class="rule" />
   </header>
@@ -201,10 +200,7 @@ li::marker { color: var(--navy); }
   <section>
     <h2>Summary</h2>
     <p>
-      Operations manager across supply chain, inventory integrity, and
-      security program delivery. Led a 50&ndash;100 person team inside
-      Amazon&rsquo;s fulfillment network, pairing Lean process work with
-      data-driven variance containment. Founded ${esc(FACTS.company)} in
+      Led a team of 50 to 100 at Amazon. Founded ${esc(FACTS.company)} in
       ${esc(FACTS.founded)} and built three reproducible lab projects mapped to
       the NIST Cybersecurity Framework and CIS benchmarks.
     </p>
@@ -215,14 +211,10 @@ li::marker { color: var(--navy); }
 
     <div class="entry">
       <div class="entry-head">
-        <span class="entry-title">Amazon &mdash; Manager, Operations &amp; Variance Containment</span>
-        <span class="entry-meta">May 2024 &ndash; September 2025</span>
+        <span class="entry-title">Amazon</span>
       </div>
       <ul>
-        <li>Directed a 50&ndash;100 person operations team across receiving, kitting, staging, and outbound, keeping physical inventory synchronized with digital records.</li>
-        <li>Partnered with Loss Prevention and Quality Assurance to launch rapid-response protocols for inventory leakage, closing gaps between automated warehouse systems and floor-level staging.</li>
-        <li>Led cross-functional overhauls aligning floor execution with enterprise throughput targets; applied Lean methods to receiving, kitting, and outbound logistics.</li>
-        <li>Converted variance logs into weekly operational directives, reducing reconciliation blind spots that threatened customer delivery commitments.</li>
+        <li>Led a team of 50 to 100.</li>
       </ul>
     </div>
 
@@ -231,10 +223,9 @@ li::marker { color: var(--navy); }
         <span class="entry-title">${esc(FACTS.company)} &mdash; Founder</span>
         <span class="entry-meta">${esc(FACTS.founded)} &ndash; Present</span>
       </div>
-      <div class="entry-sub">Dallas, Texas &middot; independent practice</div>
       <ul>
-        <li>Founded a security and supply chain practice offering three fixed-scope services: security risk assessments, vendor and supply chain reviews, and web application reviews.</li>
-        <li>Built three reproducible lab projects from scratch, publishing the method, raw JSON evidence, and a 9-page dossier so the results can be checked.</li>
+        <li>Founded a security practice offering three fixed-scope services: security risk assessments, vendor and supply chain reviews, and web application reviews.</li>
+        <li>Built three reproducible lab projects, publishing the method, raw JSON evidence and the dossier so the results can be checked.</li>
         <li>Wrote the practice deliverables: a prioritized risk register, a vendor scoring model with line-by-line evidence notes, and a code-level remediation list.</li>
       </ul>
     </div>
@@ -267,7 +258,7 @@ li::marker { color: var(--navy); }
     <div class="entry">
       <div class="entry-head">
         <span class="entry-title">Web Application Surface Audit &amp; Header Hardening</span>
-        <span class="entry-meta">Own lab systems</span>
+        <span class="entry-meta">Personal lab</span>
       </div>
       <ul>
         <li>Analyzed and remediated header policies, CSP directives, and session termination flaws across five staging environments built and maintained in a personal lab.</li>
@@ -279,14 +270,8 @@ li::marker { color: var(--navy); }
     <h2>Education</h2>
     <div class="entry">
       <div class="entry-head">
-        <span class="entry-title">Drexel University &mdash; MBA; MS, Supply Chain Management &amp; Logistics</span>
-        <span class="entry-meta">2021</span>
-      </div>
-    </div>
-    <div class="entry">
-      <div class="entry-head">
-        <span class="entry-title">Drexel University &mdash; BSBA; B.S., Supply Chain Management</span>
-        <span class="entry-meta">2021</span>
+        <span class="entry-title">Drexel University &mdash; B.S. in Computing and Security Technology (BSCST)</span>
+        <span class="entry-meta">2024</span>
       </div>
     </div>
   </section>
@@ -299,12 +284,9 @@ li::marker { color: var(--navy); }
   <section>
     <h2>Skills</h2>
     <p class="skills">
-      Supply chain operations &middot; inventory variance and loss prevention
-      &middot; Lean process improvement &middot; cross-functional program
-      leadership &middot; vendor risk reviews &middot; NIST Cybersecurity
-      Framework &middot; CIS benchmarks &middot; Docker and container hardening
-      &middot; security headers and content security policy &middot; remediation
-      planning &middot; technical writing
+      NIST Cybersecurity Framework &middot; CIS benchmarks &middot; Docker and
+      container hardening &middot; security headers and content security policy
+      &middot; remediation planning &middot; technical writing
     </p>
   </section>
 

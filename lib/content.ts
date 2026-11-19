@@ -40,12 +40,11 @@ export const siteConfig = {
   email: "inquiry@yalgar.com",
   linkedin: "https://linkedin.com/in/yash-patelycc",
   github: "https://github.com/pmyash911",
-  resume: "/resume.pdf?v=2026-11-19",
+  resume: "/resume.pdf?v=2026-11-19-2",
   website: "https://yalgar.com",
-  location: "Dallas–Fort Worth Metroplex",
   founded: "October 2026",
   credentials:
-    "MBA and MS, Supply Chain Management & Logistics; B.S., Supply Chain Management (Drexel University); Member, CSCMP",
+    "B.S. in Computing and Security Technology (BSCST), Drexel University, 2024; Member, CSCMP",
   tagline:
     "Practical security, supply chain, and operations consulting for small and mid-size organizations.",
   consultationHref:
