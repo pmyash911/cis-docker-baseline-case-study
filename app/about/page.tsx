@@ -36,6 +36,13 @@ export const metadata: Metadata = {
   },
 };
 
+const background = [
+  { label: "Name", value: siteConfig.person },
+  { label: "Based in", value: siteConfig.location },
+  { label: "Founded", value: siteConfig.founded },
+  { label: "Degrees and credentials", value: siteConfig.credentials },
+];
+
 const contactLinks = [
   {
     label: "Email",
@@ -82,9 +89,8 @@ export default function AboutPage() {
                 </h1>
                 <div className="space-y-space-lg font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
                   <p>
-                    I am {siteConfig.person}. I run {siteConfig.name}, where I do
-                    hands-on security, supply chain, and operations work for small
-                    and mid-size organizations.
+                    I am {siteConfig.person}. I founded {siteConfig.name} in{" "}
+                    {siteConfig.founded} and run it as an independent practice.
                   </p>
                   <p>
                     Most of the work starts with a question a small team cannot
@@ -97,10 +103,10 @@ export default function AboutPage() {
                     and who owns the fix.
                   </p>
                   <p>
-                    My public work is lab work. The case studies on this site come
-                    from systems I control, and I publish the method and the
-                    evidence so the result can be checked rather than taken on
-                    trust.
+                    My public work is lab work. The three case studies on this
+                    site are projects I built on systems I control, and I publish
+                    the method and the evidence so the result can be checked
+                    rather than taken on trust.
                   </p>
                 </div>
               </div>
@@ -120,6 +126,39 @@ export default function AboutPage() {
                   }}
                 />
               </div>
+            </div>
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        <section
+          aria-labelledby="background-heading"
+          className="w-full bg-surface-container-lowest py-section-mobile md:py-section-desktop"
+        >
+          <div className="mx-auto max-w-[1120px] px-margin md:px-margin-tablet lg:px-margin-desktop">
+            <div className="max-w-3xl">
+              <h2
+                id="background-heading"
+                className="mb-space-lg font-headline-lg text-headline-md text-primary md:text-headline-lg"
+              >
+                Background
+              </h2>
+              <dl className="divide-y divide-outline-variant border-y border-outline-variant">
+                {background.map((fact) => (
+                  <div
+                    key={fact.label}
+                    className="grid grid-cols-1 gap-space-xs py-space-md md:grid-cols-[16rem_1fr]"
+                  >
+                    <dt className="font-label-md text-label-md uppercase tracking-wider text-outline">
+                      {fact.label}
+                    </dt>
+                    <dd className="font-body-md text-body-md text-on-surface">
+                      {fact.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
         </section>

@@ -40,8 +40,12 @@ export const siteConfig = {
   email: "inquiry@yalgar.com",
   linkedin: "https://linkedin.com/in/yash-patelycc",
   github: "https://github.com/pmyash911",
-  resume: "/resume.pdf",
+  resume: "/resume.pdf?v=2026-11-19",
   website: "https://yalgar.com",
+  location: "Dallas–Fort Worth Metroplex",
+  founded: "October 2026",
+  credentials:
+    "MBA and MS, Supply Chain Management & Logistics; B.S., Supply Chain Management (Drexel University); Member, CSCMP",
   tagline:
     "Practical security, supply chain, and operations consulting for small and mid-size organizations.",
   consultationHref:
@@ -73,22 +77,22 @@ export const hero = {
 export const capabilities: Capability[] = [
   {
     title: "Security Risk Assessments",
-    body: "I map how your systems are actually configured against the NIST Cybersecurity Framework and CIS benchmarks, then give you a gap analysis, a prioritized risk register, and a roadmap in plain language.",
+    body: "I offer security risk assessments that map how your systems are actually configured against the NIST Cybersecurity Framework and CIS benchmarks, and hand you a gap analysis, a prioritized risk register, and a roadmap in plain language.",
   },
   {
     title: "Vendor & Supply Chain Reviews",
-    body: "I review the third parties you depend on with a scoring model I can show you line by line, a structured vendor questionnaire, and remediation requirements tied to specific findings.",
+    body: "I offer vendor and supply chain reviews built on a scoring model you can read line by line, a structured vendor questionnaire, and remediation requirements tied to specific findings.",
   },
   {
     title: "Web Application Reviews",
-    body: "I test web applications for implementation defects, exposure points, and misconfigurations, and I write each fix as a specific code change.",
+    body: "I offer web application reviews that test for implementation defects, exposure points, and misconfigurations, with each fix written as a specific code change.",
   },
 ];
 
 export const capabilityDetails: CapabilityDetail[] = [
   {
     title: "Security Risk Assessments",
-    body: "I assess how your systems are actually configured, not how the last questionnaire said they were. Every gap is mapped to the NIST Cybersecurity Framework and CIS benchmarks, so it has a reference, a reason, and a place in the queue.",
+    body: "I offer a fixed-scope assessment that maps how your systems are actually configured, not how the last questionnaire said they were. Every gap is mapped to the NIST Cybersecurity Framework and CIS benchmarks, so it has a reference, a reason, and a place in the queue.",
     includes: [
       "Identity and access: who can reach what, and whether that access is reviewed.",
       "Logging and monitoring: what gets recorded, where it goes, and who reads it.",
@@ -101,7 +105,7 @@ export const capabilityDetails: CapabilityDetail[] = [
   },
   {
     title: "Vendor & Supply Chain Reviews",
-    body: "I review the third parties you depend on and show you where the dependency could break. The scoring model is transparent: you can see every line that produced a score, and I check the supplier claims that can be checked.",
+    body: "I offer vendor and supply chain reviews that show where a dependency could break. The scoring model is transparent: you can see every line that produced a score, and supplier claims that can be checked are checked.",
     includes: [
       "What data and systems the supplier can reach.",
       "Whether their security answers are specific or boilerplate.",
@@ -114,7 +118,7 @@ export const capabilityDetails: CapabilityDetail[] = [
   },
   {
     title: "Web Application Reviews",
-    body: "I test web applications for the defects that lead to real exposure, and I write the fix as a specific change rather than general advice.",
+    body: "I offer web application reviews that test for the defects leading to real exposure, with each fix written as a specific change rather than general advice.",
     includes: [
       "Security headers and content security policy: what is missing, wrong, or too permissive.",
       "Session handling: how sessions are created, renewed, and ended.",
@@ -177,7 +181,7 @@ export const approachSteps: ApproachStep[] = [
 export const about = {
   eyebrow: "The Practice",
   heading: "About me",
-  body: "I am Yash Patel. I run Yalgar Consulting LLC, where I do hands-on security, supply chain, and operations work for small and mid-size organizations. I keep scopes fixed, test against recognized standards, and report what I found in plain language. The case studies on this site come from lab systems I control, so you can check the method and the evidence.",
+  body: "I am Yash Patel. I founded Yalgar Consulting LLC in October 2026 and offer three fixed-scope services: security risk assessments, vendor and supply chain reviews, and web application reviews. The three case studies on this site are lab projects I built on systems I control, with the method and the evidence published so the result can be checked rather than taken on trust.",
   linkLabel: "Read my full background",
 } as const;
 

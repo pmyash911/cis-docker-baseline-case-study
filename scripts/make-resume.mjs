@@ -4,9 +4,10 @@
  *
  * Typographic and single-column, per DESIGN.md: Source Serif 4 headings,
  * Source Sans 3 body, navy rules, no photo, no icons, no colour blocks.
- * Only supplied facts are rendered. Items with no approved wording (location,
- * founding date, degrees, certifications, prior employment) are omitted
- * entirely — never left as placeholder text.
+ * Job-search resume, not a capability sheet: verb-led bullets, no first-person
+ * sentences, no photo, no placeholders. Facts come from the supplied profile
+ * document. The consulting capability version of this material lives on the
+ * /capabilities page, not here.
  *
  * Uses Node built-ins plus a headless Chrome already on the machine
  * (CHROME_PATH overrides the lookup); no npm packages and no network calls.
@@ -34,10 +35,14 @@ const CHROME_CANDIDATES = [
 
 const FACTS = {
   name: "Yash Patel",
+  headline: "Supply Chain Operations & Security | Ex-Amazon",
+  location: "Dallas–Fort Worth Metroplex",
+  email: "pmyash911@gmail.com",
+  linkedin: "linkedin.com/in/yash-patelycc",
+  github: "github.com/pmyash911",
+  website: "yalgar.com",
   company: "Yalgar Consulting LLC",
-  email: "inquiry@yalgar.com",
-  linkedin: "https://linkedin.com/in/yash-patelycc",
-  github: "https://github.com/pmyash911",
+  founded: "October 2026",
 };
 
 const esc = (value) =>
@@ -186,9 +191,9 @@ li::marker { color: var(--navy); }
 <div class="page">
   <header>
     <h1>${esc(FACTS.name)}</h1>
-    <div class="role">Security, supply chain, and operations consulting</div>
+    <div class="role">${esc(FACTS.headline)}</div>
     <div class="contact">
-      ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)}
+      ${esc(FACTS.location)} &middot; ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)} &middot; ${esc(FACTS.website)}
     </div>
     <hr class="rule" />
   </header>
@@ -196,67 +201,115 @@ li::marker { color: var(--navy); }
   <section>
     <h2>Summary</h2>
     <p>
-      I run ${esc(FACTS.company)}, an independent practice that does fixed-scope
-      security risk assessments, vendor and supply chain reviews, and web
-      application reviews for small and mid-size organizations. My work ends in
-      plain-language deliverables: what to fix, why it matters, and who owns it.
+      Operations manager across supply chain, inventory integrity, and
+      security program delivery. Led a 50&ndash;100 person team inside
+      Amazon&rsquo;s fulfillment network, pairing Lean process work with
+      data-driven variance containment. Founded ${esc(FACTS.company)} in
+      ${esc(FACTS.founded)} and built three reproducible lab projects mapped to
+      the NIST Cybersecurity Framework and CIS benchmarks.
     </p>
   </section>
 
   <section>
     <h2>Experience</h2>
+
     <div class="entry">
       <div class="entry-head">
-        <span class="entry-title">${esc(FACTS.company)} — independent consulting practice</span>
-        <span class="entry-meta">Present</span>
+        <span class="entry-title">Amazon &mdash; Manager, Operations &amp; Variance Containment</span>
+        <span class="entry-meta">May 2024 &ndash; September 2025</span>
       </div>
-      <div class="entry-sub">Security, supply chain, and operations consulting</div>
       <ul>
-        <li>I assess how systems are actually configured against the NIST Cybersecurity Framework and CIS benchmarks, and turn each gap into a prioritized risk register with an owner and a target date.</li>
-        <li>I review third-party suppliers with a transparent scoring model and a structured questionnaire, and write the remediation requirements that come out of it.</li>
-        <li>I review web applications for security header, content security policy, session handling, and configuration defects, and give an explicit fix for each finding.</li>
-        <li>I keep every engagement fixed-scope, write the report in plain language, and re-test remediated items within 30 days.</li>
+        <li>Directed a 50&ndash;100 person operations team across receiving, kitting, staging, and outbound, keeping physical inventory synchronized with digital records.</li>
+        <li>Partnered with Loss Prevention and Quality Assurance to launch rapid-response protocols for inventory leakage, closing gaps between automated warehouse systems and floor-level staging.</li>
+        <li>Led cross-functional overhauls aligning floor execution with enterprise throughput targets; applied Lean methods to receiving, kitting, and outbound logistics.</li>
+        <li>Converted variance logs into weekly operational directives, reducing reconciliation blind spots that threatened customer delivery commitments.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-title">${esc(FACTS.company)} &mdash; Founder</span>
+        <span class="entry-meta">${esc(FACTS.founded)} &ndash; Present</span>
+      </div>
+      <div class="entry-sub">Dallas, Texas &middot; independent practice</div>
+      <ul>
+        <li>Founded a security and supply chain practice offering three fixed-scope services: security risk assessments, vendor and supply chain reviews, and web application reviews.</li>
+        <li>Built three reproducible lab projects from scratch, publishing the method, raw JSON evidence, and a 9-page dossier so the results can be checked.</li>
+        <li>Wrote the practice deliverables: a prioritized risk register, a vendor scoring model with line-by-line evidence notes, and a code-level remediation list.</li>
       </ul>
     </div>
   </section>
 
   <section>
-    <h2>Selected lab work</h2>
+    <h2>Projects</h2>
+
     <div class="entry">
       <div class="entry-head">
         <span class="entry-title">Container Environment Baseline &amp; CIS Audit</span>
-        <span class="entry-meta">Lab project</span>
+        <span class="entry-meta">Docker &middot; Linux &middot; POSIX shell</span>
       </div>
-      <p>I measured a read-only, 13-control CIS-aligned Docker baseline plus a separate connectivity check, against a hardened reference container and a deliberately weak companion environment, with reproducible evidence.</p>
+      <ul>
+        <li>Built a read-only harness covering 13 CIS-aligned controls plus a separate connectivity check, then measured a hardened reference container against a deliberately weak companion environment.</li>
+        <li>Recorded 6 failures on the weak environment with 5 controls flipping from pass to fail; published machine-readable JSON evidence and the dossier.</li>
+      </ul>
     </div>
+
     <div class="entry">
       <div class="entry-head">
-        <span class="entry-title">Small Business NIST CSF 2.0 Assessment Simulation</span>
-        <span class="entry-meta">Lab project</span>
+        <span class="entry-title">NIST CSF 2.0 Assessment Simulation</span>
+        <span class="entry-meta">45-person distributor</span>
       </div>
-      <p>I produced a prioritized 90-day remediation roadmap for a simulated 45-person distributor, focusing capital spend on identity governance and offsite backup isolation.</p>
+      <ul>
+        <li>Produced a 90-day prioritized remediation roadmap weighted to identity governance and offsite backup isolation.</li>
+      </ul>
     </div>
+
     <div class="entry">
       <div class="entry-head">
         <span class="entry-title">Web Application Surface Audit &amp; Header Hardening</span>
-        <span class="entry-meta">Lab project</span>
+        <span class="entry-meta">Own lab systems</span>
       </div>
-      <p>I analyzed and remediated security header policies, CSP directives, and session termination flaws across five staging environments that are my own lab systems, not client infrastructure.</p>
+      <ul>
+        <li>Analyzed and remediated header policies, CSP directives, and session termination flaws across five staging environments maintained in my own lab.</li>
+      </ul>
     </div>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-title">Drexel University &mdash; MBA; MS, Supply Chain Management &amp; Logistics</span>
+        <span class="entry-meta">2021</span>
+      </div>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-title">Drexel University &mdash; BSBA; B.S., Supply Chain Management</span>
+        <span class="entry-meta">2021</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Professional</h2>
+    <p>Member, Council of Supply Chain Management Professionals (CSCMP).</p>
   </section>
 
   <section>
     <h2>Skills</h2>
     <p class="skills">
-      NIST Cybersecurity Framework (CSF 2.0) &middot; CIS Benchmarks &middot; Docker
-      and container hardening &middot; security headers and content security policy
-      &middot; session and authentication review &middot; vendor risk questionnaires
-      and scoring &middot; remediation planning &middot; technical writing
+      Supply chain operations &middot; inventory variance and loss prevention
+      &middot; Lean process improvement &middot; cross-functional program
+      leadership &middot; vendor risk reviews &middot; NIST Cybersecurity
+      Framework &middot; CIS benchmarks &middot; Docker and container hardening
+      &middot; security headers and content security policy &middot; remediation
+      planning &middot; technical writing
     </p>
   </section>
 
   <div class="foot">
-    ${esc(FACTS.company)} &middot; ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)}
+    ${esc(FACTS.name)} &middot; ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)}
   </div>
 </div>
 </body>
