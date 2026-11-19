@@ -36,6 +36,9 @@ const PAGES = [
   "/privacy",
 ];
 
+/* Pages whose markup is validated but which are not navigated to (they redirect). */
+const MARKUP_ONLY_PAGES = ["/resume"];
+
 const results = [];
 const record = (section, name, ok, detail = "") => {
   results.push({ section, name, ok, detail });
@@ -98,6 +101,10 @@ async function checkLinks(client, pages) {
 /* ----------------------------------------------------------- html validation */
 async function checkHtml(pages) {
   console.log("\n1. HTML validation");
+  for (const extra of MARKUP_ONLY_PAGES) {
+    const res = await fetch(`${BASE}${extra}`);
+    pages = [...pages, [extra, await res.text()]];
+  }
   const { HtmlValidate } = await import("html-validate");
   const hv = new HtmlValidate({
     extends: ["html-validate:recommended"],
@@ -243,6 +250,44 @@ async function checkAbout(browser) {
   await page.close();
 }
 
+/* ------------------------------------------------- resume social wrapper */
+async function checkResumeWrapper() {
+  console.log("\n7. Resume wrapper (/resume)");
+  const res = await fetch(`${BASE}/resume`, {
+    headers: { "user-agent": "LinkedInBot/1.0" },
+  });
+  const html = await res.text();
+  const tag = (re) => (html.match(re) ?? [])[1] ?? null;
+
+  record("resume-card", "route returns 200 HTML",
+    res.status === 200 && (res.headers.get("content-type") ?? "").includes("text/html"),
+    `status ${res.status}`);
+  record("resume-card", "og:image points at /og-resume.png",
+    tag(/<meta property="og:image" content="([^"]+)"/) === "https://yalgar.com/og-resume.png",
+    tag(/<meta property="og:image" content="([^"]+)"/));
+  record("resume-card", "og:image declares 1200x627",
+    tag(/<meta property="og:image:width" content="([^"]+)"/) === "1200" &&
+      tag(/<meta property="og:image:height" content="([^"]+)"/) === "627");
+  record("resume-card", "og:title present", Boolean(tag(/<meta property="og:title" content="([^"]+)"/)),
+    tag(/<meta property="og:title" content="([^"]+)"/));
+  record("resume-card", "og:description present",
+    Boolean(tag(/<meta property="og:description" content="([^"]+)"/)));
+  record("resume-card", "og:url present",
+    tag(/<meta property="og:url" content="([^"]+)"/) === "https://yalgar.com/resume");
+  record("resume-card", "instant redirect to the PDF",
+    /http-equiv="refresh" content="0; url=\/resume\.pdf/.test(html) &&
+      html.includes("location.replace"));
+
+  // the image must exist and really be 1200x627
+  const img = await fetch(`${BASE}/og-resume.png`);
+  const bytes = Buffer.from(await img.arrayBuffer());
+  const isPng = bytes.subarray(1, 4).toString("ascii") === "PNG";
+  const w = isPng ? bytes.readUInt32BE(16) : 0;
+  const h = isPng ? bytes.readUInt32BE(20) : 0;
+  record("resume-card", "og-resume.png is a 1200x627 PNG",
+    img.status === 200 && isPng && w === 1200 && h === 627, `${w}x${h}`);
+}
+
 /* ----------------------------------------------------- public surface scan */
 async function checkSurface(pages) {
   console.log("\n6. Public surface scan");
@@ -283,6 +328,7 @@ try {
   await checkTapTargets(browser);
   await checkAbout(browser);
   await checkSurface(pages);
+  await checkResumeWrapper();
 
   await browser.close();
 
