@@ -211,10 +211,13 @@ li::marker { color: var(--navy); }
 
     <div class="entry">
       <div class="entry-head">
-        <span class="entry-title">Amazon</span>
+        <span class="entry-title">Amazon &mdash; Manager</span>
+        <span class="entry-meta">August 2024 &ndash; August 2025</span>
       </div>
       <ul>
-        <li>Led a team of 50 to 100.</li>
+        <li>Directed a 50&ndash;100 person operations team across receiving, kitting, staging, and outbound, keeping physical inventory synchronized with digital records.</li>
+        <li>Partnered with Loss Prevention and Quality Assurance to launch rapid-response protocols for inventory leakage, closing gaps between automated warehouse systems and floor-level staging.</li>
+        <li>Led cross-functional overhauls aligning floor execution with enterprise throughput targets; applied Lean methods to receiving, kitting, and outbound logistics.</li>
       </ul>
     </div>
 

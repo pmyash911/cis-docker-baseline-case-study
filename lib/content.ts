@@ -40,7 +40,7 @@ export const siteConfig = {
   email: "inquiry@yalgar.com",
   linkedin: "https://linkedin.com/in/yash-patelycc",
   github: "https://github.com/pmyash911",
-  resume: "/resume.pdf?v=2026-11-19-2",
+  resume: "/resume.pdf?v=2026-11-19-3",
   website: "https://yalgar.com",
   founded: "October 2026",
   credentials:
