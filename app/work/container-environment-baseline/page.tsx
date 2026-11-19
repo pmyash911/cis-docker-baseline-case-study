@@ -11,13 +11,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "Case study: Container Environment Baseline & CIS Audit",
+  title: "Case study: Container Environment Baseline & CIS-Aligned Audit",
   description:
-    "A read-only, 14-control CIS Docker baseline measured against a hardened production container and a deliberately weak companion environment — with findings, remediation and reproducible evidence.",
+    "A read-only baseline of 13 CIS-aligned controls plus one connectivity check, measured against a hardened reference container and a deliberately weak companion environment — with findings, remediation and reproducible evidence.",
   openGraph: {
-    title: "Case study: Container Environment Baseline & CIS Audit",
+    title: "Case study: Container Environment Baseline & CIS-Aligned Audit",
     description:
-      "14-control CIS Docker baseline: hardened vs weak environments, measured evidence and remediation.",
+      "13 CIS-aligned controls plus a connectivity check: hardened vs weak environments, measured evidence and remediation.",
     type: "article",
   },
 };

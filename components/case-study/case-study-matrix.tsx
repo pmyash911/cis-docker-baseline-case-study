@@ -1,55 +1,67 @@
 type MatrixRow = {
-  rule: string;
+  id: string;
   title: string;
   note: string;
-  level: string;
-  status: "PASS" | "FAIL" | "N/A";
+  area: string;
+  baseline: "PASS" | "FAIL" | "N/A";
+  weak: "PASS" | "FAIL" | "N/A";
   directive: string;
 };
 
 const rows: MatrixRow[] = [
   {
-    rule: "CIS 1.1.1",
-    title: "Host Filesystem Auditing",
-    note: "Verify auditd rule configuration for docker daemon files",
-    level: "Level 1",
-    status: "N/A",
-    directive: "—",
+    id: "AUD-01",
+    title: "Host filesystem auditing",
+    note: "auditd rules covering the docker daemon and its files",
+    area: "Host",
+    baseline: "N/A",
+    weak: "N/A",
+    directive: "Not evaluable: auditd is not installed on the sandbox host",
   },
   {
-    rule: "CIS 2.1.4",
-    title: "Default ulimit Enforcement",
-    note: "Check core dump & open file handles in daemon config",
-    level: "Level 1",
-    status: "FAIL",
+    id: "AUD-04",
+    title: "Default ulimit enforcement",
+    note: "Core-dump and open-file defaults in the daemon config",
+    area: "Daemon",
+    baseline: "FAIL",
+    weak: "FAIL",
     directive:
-      'Set "default-ulimits": {"nofile": {"Name":"nofile","Hard":64000,"Soft":64000}}',
+      'Set "default-ulimits": {"nofile": {"Name": "nofile", "Hard": 64000, "Soft": 64000}}',
   },
   {
-    rule: "CIS 4.1.2",
-    title: "Non-Root User Declaration",
-    note: "Ensure container manifest designates unprivileged UID > 1000",
-    level: "Level 1",
-    status: "PASS",
-    directive: "Inject USER nonroot:nonroot (UID 65532) in Dockerfile build stage",
+    id: "AUD-08",
+    title: "Non-root user declaration",
+    note: "Container manifest designates an unprivileged user",
+    area: "Images",
+    baseline: "PASS",
+    weak: "FAIL",
+    directive: "Add an explicit non-root USER to the image and drop privileges at runtime",
   },
   {
-    rule: "CIS 5.1.1",
-    title: "AppArmor Profile Attestation",
-    note: "Verify docker-default or tailored security profile active",
-    level: "Level 1",
-    status: "N/A",
-    directive: "—",
+    id: "AUD-09",
+    title: "AppArmor profile enforcement",
+    note: "docker-default or tailored security profile active",
+    area: "Runtime",
+    baseline: "N/A",
+    weak: "N/A",
+    directive: "Not evaluable: AppArmor is not available on the sandbox kernel",
   },
   {
-    rule: "CIS 5.2.2",
-    title: "Read-Only Root Filesystem",
-    note: "Ensure write operations strictly directed to mounted tmpfs",
-    level: "Level 2",
-    status: "PASS",
-    directive: "--read-only runtime invocation active on production services",
+    id: "AUD-10",
+    title: "Read-only root filesystem",
+    note: "Write operations routed to mounted tmpfs",
+    area: "Runtime",
+    baseline: "PASS",
+    weak: "FAIL",
+    directive: "--read-only runtime invocation active on reference services",
   },
 ];
+
+function stateClass(status: MatrixRow["baseline"]) {
+  if (status === "FAIL") return "text-error";
+  if (status === "N/A") return "text-outline";
+  return "text-primary";
+}
 
 export function CaseStudyMatrix() {
   return (
@@ -61,35 +73,33 @@ export function CaseStudyMatrix() {
               03 // EVALUATION MATRIX
             </span>
             <h2 className="font-headline-md text-headline-md text-primary">
-              Representative CIS Rule Verification Matrix
+              Representative CIS-aligned verification matrix
             </h2>
           </div>
           <div className="font-caption text-caption text-outline">
-            Sample controls from the 14-control public baseline
+            Sample controls from the 13-control CIS-aligned baseline
           </div>
         </div>
 
         <div className="w-full overflow-x-auto bg-surface-container-lowest">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-surface-container font-label-md text-caption uppercase tracking-wider text-primary">
-                <th className="w-28 px-space-md py-space-sm">Rule ID</th>
-                <th className="px-space-md py-space-sm">Control Description</th>
-                <th className="w-28 px-space-md py-space-sm">CIS Level</th>
-                <th className="w-32 px-space-md py-space-sm">Status</th>
+              <tr className="border-y border-outline-variant font-label-md text-caption uppercase tracking-wider text-primary">
+                <th className="w-24 px-space-md py-space-sm">ID</th>
+                <th className="px-space-md py-space-sm">Control</th>
+                <th className="w-24 px-space-md py-space-sm">Area</th>
+                <th className="w-24 px-space-md py-space-sm">Baseline</th>
+                <th className="w-24 px-space-md py-space-sm">Weak</th>
                 <th className="hidden px-space-md py-space-sm md:table-cell">
-                  Automated Remediation Directive
+                  Remediation directive
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-container-highest font-body-md text-sm">
               {rows.map((row) => (
-                <tr
-                  key={row.rule}
-                  className="transition-colors hover:bg-surface-container-low"
-                >
+                <tr key={row.id} className="transition-colors hover:bg-surface-container-low">
                   <td className="px-space-md py-space-md font-mono font-semibold text-primary">
-                    {row.rule}
+                    {row.id}
                   </td>
                   <td className="px-space-md py-space-md">
                     <span className="block font-semibold text-on-surface">
@@ -100,20 +110,17 @@ export function CaseStudyMatrix() {
                     </span>
                   </td>
                   <td className="px-space-md py-space-md font-caption text-outline">
-                    {row.level}
+                    {row.area}
                   </td>
-                  <td className="px-space-md py-space-md">
-                    <span
-                      className={
-                        row.status === "PASS"
-                          ? "inline-flex items-center bg-surface-container px-2 py-0.5 font-mono text-xs font-semibold text-primary"
-                          : row.status === "N/A"
-                            ? "inline-flex items-center bg-surface-container-low px-2 py-0.5 font-mono text-xs font-semibold text-outline"
-                            : "inline-flex items-center bg-error-container px-2 py-0.5 font-mono text-xs font-semibold text-on-error-container"
-                      }
-                    >
-                      {row.status}
-                    </span>
+                  <td
+                    className={`px-space-md py-space-md font-mono text-xs font-semibold ${stateClass(row.baseline)}`}
+                  >
+                    {row.baseline}
+                  </td>
+                  <td
+                    className={`px-space-md py-space-md font-mono text-xs font-semibold ${stateClass(row.weak)}`}
+                  >
+                    {row.weak}
                   </td>
                   <td className="hidden px-space-md py-space-md font-mono text-xs text-on-surface-variant md:table-cell">
                     {row.directive}
@@ -125,7 +132,11 @@ export function CaseStudyMatrix() {
         </div>
 
         <div className="mt-space-md flex flex-col justify-between gap-space-xs text-caption text-outline sm:flex-row sm:items-center">
-          <div>* Evaluated against CIS Docker Benchmark v1.6.0 control descriptions; measured 18 Nov 2026.</div>
+          <div>
+            * CIS-aligned controls with our own AUD-xx identifiers, grouped by
+            CIS Docker Benchmark area. They are not verified CIS rule numbers and
+            this is not a certifying CIS assessment. Measured 18 Nov 2026.
+          </div>
           <div>N/A is reported explicitly and never counted as a pass.</div>
         </div>
       </div>

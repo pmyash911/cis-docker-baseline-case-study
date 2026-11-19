@@ -1,19 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { BrandLockup } from "@/components/brand-lockup";
 import { navItems, siteConfig } from "@/lib/content";
+import type { NavItem } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
-  const markWork = pathname.startsWith("/work");
+  // Route pages own one nav item; home sections are handled by the scroll-spy.
+  const routeKey =
+    pathname === "/capabilities"
+      ? "capabilities"
+      : pathname === "/about"
+        ? "about"
+        : pathname.startsWith("/work")
+          ? "work"
+          : "";
   const [activeKey, setActiveKey] = useState<string>(() =>
-    isHome ? "" : markWork ? "work" : "",
+    isHome ? "" : routeKey,
   );
 
   // Close the mobile panel on navigation.
@@ -21,14 +31,16 @@ export function SiteHeader() {
     setMenuOpen(false);
   }, [pathname]);
 
-  // Scroll-spy: highlight the nav item whose section is in view.
+  // Scroll-spy: highlight the nav item whose section is in view. Only home
+  // anchors participate; route links are marked active from the pathname.
   useEffect(() => {
     if (!isHome) {
-      setActiveKey(markWork ? "work" : "");
+      setActiveKey(routeKey);
       return;
     }
 
     const sections = navItems.flatMap((item) => {
+      if (!item.href.startsWith("#")) return [];
       const element = document.getElementById(item.hash.slice(1));
       return element ? [{ key: item.key, element }] : [];
     });
@@ -52,7 +64,7 @@ export function SiteHeader() {
 
     sections.forEach((section) => observer.observe(section.element));
     return () => observer.disconnect();
-  }, [isHome, markWork]);
+  }, [isHome, routeKey]);
 
   // Prevent background scroll while the mobile menu is open.
   useEffect(() => {
@@ -71,7 +83,9 @@ export function SiteHeader() {
     };
   }, [menuOpen]);
 
-  const hrefFor = (hash: string) => (isHome ? hash : `/${hash}`);
+  // Home anchors stay in-page; from any other page they resolve to "/#section".
+  const hrefFor = (item: NavItem) =>
+    item.href.startsWith("#") && !isHome ? `/${item.href}` : item.href;
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-outline-variant bg-surface-container-lowest">
@@ -82,17 +96,27 @@ export function SiteHeader() {
           <nav aria-label="Primary" className="flex h-16 items-center gap-6 md:gap-7">
             {navItems.map((item) => {
               const isActive = activeKey === item.key;
-              return (
+              const className = cn(
+                "inline-flex h-full items-center border-b-2 px-1 text-[15px] no-underline transition-colors",
+                isActive
+                  ? "border-[#0B2A4A] font-semibold text-[#0B2A4A]"
+                  : "border-transparent font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
+              );
+              return item.href.startsWith("/") ? (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={className}
+                >
+                  {item.label}
+                </Link>
+              ) : (
                 <a
                   key={item.key}
-                  href={hrefFor(item.hash)}
+                  href={hrefFor(item)}
                   aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "inline-flex h-full items-center border-b-2 px-1 text-[15px] no-underline transition-colors",
-                    isActive
-                      ? "border-[#0B2A4A] font-semibold text-[#0B2A4A]"
-                      : "border-transparent font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
-                  )}
+                  className={className}
                 >
                   {item.label}
                 </a>
@@ -145,22 +169,40 @@ export function SiteHeader() {
             className="mx-auto max-w-[1120px] px-margin py-space-sm md:px-margin-tablet"
           >
             <ul>
-              {navItems.map((item) => (
-                <li key={item.key} className="border-b border-outline-variant last:border-b-0">
-                  <a
-                    href={hrefFor(item.hash)}
-                    onClick={() => setMenuOpen(false)}
-                    className={cn(
-                      "flex items-center px-1 py-space-md text-[15px] no-underline transition-colors",
-                      activeKey === item.key
-                        ? "font-semibold text-[#0B2A4A]"
-                        : "font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
-                    )}
+              {navItems.map((item) => {
+                const className = cn(
+                  "flex items-center px-1 py-space-md text-[15px] no-underline transition-colors",
+                  activeKey === item.key
+                    ? "font-semibold text-[#0B2A4A]"
+                    : "font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
+                );
+                return (
+                  <li
+                    key={item.key}
+                    className="border-b border-outline-variant last:border-b-0"
                   >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+                    {item.href.startsWith("/") ? (
+                      <Link
+                        href={item.href}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={activeKey === item.key ? "page" : undefined}
+                        className={className}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={hrefFor(item)}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={activeKey === item.key ? "page" : undefined}
+                        className={className}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             <div className="mt-space-xl border-t border-outline-variant pt-space-lg">
               <a

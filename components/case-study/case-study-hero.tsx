@@ -3,8 +3,8 @@ import Link from "next/link";
 const metrics = [
   {
     label: "Baseline Controls",
-    value: "10/14",
-    note: "PASS · 1 open finding · 3 N/A",
+    value: "9/13",
+    note: "CIS-aligned PASS · 1 open finding · 3 N/A · connectivity PASS",
   },
   {
     label: "Weak-Env Failures",
@@ -13,8 +13,8 @@ const metrics = [
   },
   {
     label: "Control Coverage",
-    value: "14",
-    note: "CIS Docker baseline · read-only harness",
+    value: "13 + 1",
+    note: "CIS-aligned controls + one connectivity check",
   },
   {
     label: "Execution Footprint",
@@ -58,7 +58,7 @@ export function CaseStudyHero() {
         </nav>
 
         <div className="flex flex-wrap items-center justify-between gap-space-md pb-space-md">
-          <span className="inline-block bg-surface-container px-3 py-1 font-label-md font-semibold uppercase tracking-wider text-caption text-primary">
+          <span className="inline-block border border-outline-variant px-3 py-1 font-label-md font-semibold uppercase tracking-wider text-caption text-primary">
             Lab Project · Infrastructure Security
           </span>
           <div className="font-caption text-caption uppercase tracking-widest text-outline">
@@ -69,12 +69,13 @@ export function CaseStudyHero() {
         <div className="mt-space-md max-w-4xl">
           <h1 className="font-display text-headline-lg leading-tight text-primary md:text-display">
             Container Environment Baseline{" "}
-            <span className="whitespace-nowrap">&amp; CIS Audit</span>
+            <span className="whitespace-nowrap">&amp; CIS-Aligned Audit</span>
           </h1>
           <p className="mt-space-md max-w-3xl font-body-lg text-body-lg text-on-surface-variant">
-            A read-only, 14-control CIS Docker baseline run against a hardened
-            production container and a deliberately weak companion environment —
-            with findings, remediation and reproducible evidence.
+            A read-only baseline of 13 CIS-aligned controls plus one connectivity
+            check, run against a hardened reference container and a deliberately
+            weak companion environment — with findings, remediation and
+            reproducible evidence.
           </p>
         </div>
 

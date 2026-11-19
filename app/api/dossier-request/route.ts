@@ -129,7 +129,7 @@ export async function POST(request: Request) {
   const contactEmail =
     process.env.DOSSIER_NOTIFY_EMAIL ??
     process.env.DOSSIER_FROM_EMAIL ??
-    "inqury@yalgar.com";
+    "inquiry@yalgar.com";
   const publicUrl = `${siteUrl}${dossier.pagePath}`;
   const attribution = readAttribution(body);
   const submittedAt = new Date().toISOString();

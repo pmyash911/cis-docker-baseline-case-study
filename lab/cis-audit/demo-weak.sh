@@ -27,10 +27,10 @@ require_linux() {
 
 setup() {
   require_linux
-  echo "→ creating network $NETWORK"
+  echo "creating network $NETWORK"
   docker network create "$NETWORK" >/dev/null 2>&1 || true
 
-  echo "→ weak container 1: privileged, root user, unconfined AppArmor, writable rootfs, no limits"
+  echo "weak container 1: privileged, root user, unconfined AppArmor, writable rootfs, no limits"
   docker rm -f "$WEAK1" >/dev/null 2>&1 || true
   docker run -d --name "$WEAK1" --network "$NETWORK" \
     --privileged \
@@ -40,7 +40,7 @@ setup() {
       echo "  ! could not start $WEAK1 (the sandbox may restrict privileged containers)" >&2
     }
 
-  echo "→ weak container 2: root user, docker socket mounted, no limits"
+  echo "weak container 2: root user, docker socket mounted, no limits"
   docker rm -f "$WEAK2" >/dev/null 2>&1 || true
   docker run -d --name "$WEAK2" --network "$NETWORK" \
     --user root \

@@ -34,11 +34,11 @@ export const DOSSIERS: Record<string, Dossier> = {
   "container-environment-baseline": {
     key: "container-environment-baseline",
     ref: "YLG-AUD-2026-084",
-    caseStudyTitle: "Container Environment Baseline & CIS Audit",
+    caseStudyTitle: "Container Environment Baseline & CIS-Aligned Audit",
     pagePath: "/work/container-environment-baseline",
     dossierFile: "container-environment-baseline.pdf",
     emailSubject:
-      "Your dossier — Container Environment Baseline & CIS Audit (YLG-AUD-2026-084)",
+      "Your dossier — Container Environment Baseline & CIS-Aligned Audit (YLG-AUD-2026-084)",
   },
 };
 

@@ -28,8 +28,9 @@ export const metadata: Metadata = {
   description:
     "Fixed-scope reviews and plain-language deliverables designed to answer what to fix, why it matters, and who owns it. Security risk assessments, vendor and supply chain reviews, and web application reviews for small and mid-size organizations.",
   applicationName: "Yalgar Consulting LLC",
-  authors: [{ name: "Yalgar Consulting LLC" }],
-  creator: "Yalgar Consulting LLC",
+  authors: [{ name: "Yash Patel", url: "https://yalgar.com/about" }],
+  creator: "Yash Patel",
+  publisher: "Yalgar Consulting LLC",
   keywords: [
     "security risk assessment",
     "supply chain consulting",
@@ -47,6 +48,14 @@ export const metadata: Metadata = {
     description:
       "Fixed-scope reviews and plain-language deliverables for small and mid-size organizations.",
     url: "https://yalgar.com",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Yalgar Consulting LLC — practical security, supply chain, and operations consulting",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,6 +63,7 @@ export const metadata: Metadata = {
       "Yalgar Consulting LLC — Practical security, supply chain, and operations consulting",
     description:
       "Fixed-scope reviews and plain-language deliverables for small and mid-size organizations.",
+    images: ["/og.png"],
   },
   icons: {
     icon: "/icon.svg",
@@ -70,6 +80,35 @@ export const viewport: Viewport = {
   themeColor: "#fcf9f8",
 };
 
+// Person/Organization entities so search engines can associate the practice
+// with Yash Patel and his public profiles (sameAs).
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://yalgar.com/#organization",
+      name: "Yalgar Consulting LLC",
+      alternateName: "Yalgar Consulting",
+      url: "https://yalgar.com",
+      email: "inquiry@yalgar.com",
+      founder: { "@id": "https://yalgar.com/#person" },
+    },
+    {
+      "@type": "Person",
+      "@id": "https://yalgar.com/#person",
+      name: "Yash Patel",
+      url: "https://yalgar.com/about",
+      email: "inquiry@yalgar.com",
+      sameAs: [
+        "https://linkedin.com/in/yash-patelycc",
+        "https://github.com/pmyash911",
+      ],
+      worksFor: { "@id": "https://yalgar.com/#organization" },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -83,6 +122,12 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         <Analytics />
       </body>
     </html>

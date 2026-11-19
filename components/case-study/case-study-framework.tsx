@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 
-import { IconShieldCheck } from "@/components/icons";
-
 type Pillar = {
   section: string;
   title: string;
@@ -10,66 +8,59 @@ type Pillar = {
 
 const pillars: Pillar[] = [
   {
-    section: "Section 1.0",
-    title: "Host Configuration",
+    section: "Section 1",
+    title: "Host configuration",
     body: (
       <>
-        Auditing Linux kernel parameter namespaces, separate partitions for
+        auditd rules covering the Docker daemon, a separate partition for
         container storage (
         <code className="bg-surface-container px-1 py-0.5 font-mono text-xs text-primary">
           /var/lib/docker
         </code>
-        ), and auditd surveillance of container daemons.
+        ), and the daemon configuration file permissions.
       </>
     ),
   },
   {
-    section: "Section 2.0",
-    title: "Daemon Configuration",
+    section: "Section 2",
+    title: "Daemon configuration",
     body: (
       <>
-        Evaluation of IPC namespaces, TLS mutual authentication parameters,
-        network bridge IP tables enforcement, and deprecation of legacy
-        unconfined capabilities.
+        Whether the daemon declares default ulimits for containers, and whether
+        the remote API is protected by TLS with client certificate verification.
       </>
     ),
   },
   {
-    section: "Section 3.0",
-    title: "Daemon File Perms",
+    section: "Section 3",
+    title: "Daemon file permissions",
     body: (
       <>
-        Strict POSIX permissions audits of{" "}
+        POSIX permission audits of the Docker socket handle and the{" "}
         <code className="bg-surface-container px-1 py-0.5 font-mono text-xs text-primary">
           docker.service
-        </code>
-        , socket handles, systemd unit files, and client certificate bundles with
-        verification against UID 0.
-      </>
-    ),
-  },
-  {
-    section: "Section 4.0",
-    title: "Container Images & Builds",
-    body: (
-      <>
-        Validation of explicit non-privileged user directives, removal of package
-        manager caches, verification of signed trust content, and restriction of{" "}
-        <code className="bg-surface-container px-1 py-0.5 font-mono text-xs text-primary">
-          setuid
         </code>{" "}
-        binaries.
+        systemd unit file.
       </>
     ),
   },
   {
-    section: "Section 5.0",
-    title: "Container Runtime",
+    section: "Section 4",
+    title: "Container images and builds",
     body: (
       <>
-        Runtime memory limits, CPU shares, read-only root filesystems,
-        AppArmor/SELinux profile pinning, privileged flag containment, and
-        sensitive host path mounts.
+        Verification that running containers declare an explicit non-root user
+        rather than inheriting root from the image.
+      </>
+    ),
+  },
+  {
+    section: "Section 5",
+    title: "Container runtime",
+    body: (
+      <>
+        AppArmor profile enforcement, read-only root filesystems, privileged
+        flags, memory and CPU limits, and docker-socket mounts into containers.
       </>
     ),
   },
@@ -84,17 +75,22 @@ export function CaseStudyFramework() {
             02 // FRAMEWORK
           </span>
           <h2 className="font-headline-md text-headline-md text-primary">
-            CIS Audit Scoping &amp; Assessment Architecture
+            CIS-aligned audit scoping and assessment
           </h2>
           <p className="mt-space-xs max-w-2xl font-body-md text-body-md text-on-surface-variant">
-            Evaluation protocol segmented into five distinct control planes per
-            CIS specifications, executed via read-only introspection.
+            The control set is segmented into five areas and executed via
+            read-only introspection. It is mapped to the areas the CIS Docker
+            Benchmark covers, using our own AUD-01 to AUD-13 identifiers rather
+            than asserted CIS rule numbers.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-space-md md:grid-cols-2 lg:grid-cols-3">
           {pillars.map((pillar) => (
-            <div key={pillar.section} className="bg-surface-container-lowest p-space-lg">
+            <div
+              key={pillar.section}
+              className="border-t border-outline-variant bg-surface-container-lowest p-space-lg pt-space-md"
+            >
               <div className="mb-space-xs font-caption text-caption uppercase tracking-wider text-outline">
                 {pillar.section}
               </div>
@@ -107,41 +103,38 @@ export function CaseStudyFramework() {
             </div>
           ))}
 
-          <div className="flex flex-col justify-between bg-primary p-space-lg text-on-primary">
+          <div className="flex flex-col justify-between border-t border-outline-variant bg-surface-container-lowest p-space-lg pt-space-md">
             <div>
-              <div className="mb-space-xs font-caption text-caption uppercase tracking-wider text-on-primary-container">
+              <div className="mb-space-xs font-caption text-caption uppercase tracking-wider text-outline">
                 Operating Protocol
               </div>
-              <h3 className="mb-space-sm font-headline-sm text-headline-sm text-on-primary">
-                Zero Agent Overhead
+              <h3 className="mb-space-sm font-headline-sm text-headline-sm text-primary">
+                Zero agent overhead
               </h3>
-              <p className="text-sm font-body-md leading-relaxed text-body-md text-surface-container-highest">
+              <p className="text-sm font-body-md leading-relaxed text-body-md text-on-surface-variant">
                 No long-running daemons, sidecars, or elevated RPC calls. Audits
                 can be injected cleanly into GitHub Actions, GitLab CI, or
-                air-gapped staging nodes via curl/sh pipelines.
+                air-gapped staging nodes via sh pipelines.
               </p>
             </div>
             <div className="pt-space-md">
-              <span className="font-caption font-mono text-caption uppercase text-outline-variant">
-                POSIX.1-2008 Compliant
+              <span className="font-caption font-mono text-caption uppercase text-outline">
+                POSIX.1-2008 compliant
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-space-lg border-l-4 border-primary bg-surface-container p-space-md">
-          <div className="flex items-start gap-space-sm">
-            <IconShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-            <p className="font-caption leading-relaxed text-caption text-on-surface-variant">
-              <strong className="font-semibold text-primary">
-                Disclosure Policy:
-              </strong>{" "}
-              Detailed test harnesses, customer infrastructure topology, and
-              vulnerability reproduction code are withheld from this public
-              brief. Verified prospective clients may request the unredacted
-              technical annex.
-            </p>
-          </div>
+        <div className="mt-space-lg border-t border-outline-variant pt-space-md">
+          <p className="font-caption leading-relaxed text-caption text-on-surface-variant">
+            <strong className="font-semibold text-primary">
+              Disclosure policy:
+            </strong>{" "}
+            Detailed test harnesses, customer infrastructure topology, and
+            vulnerability reproduction code are withheld from this public brief.
+            Verified prospective clients may request the unredacted technical
+            annex.
+          </p>
         </div>
       </div>
     </section>

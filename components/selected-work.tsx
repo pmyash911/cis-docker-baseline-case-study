@@ -52,7 +52,7 @@ export function SelectedWork() {
                   href={item.href}
                   className="font-label-md text-label-md text-primary transition-colors hover:text-on-surface-variant"
                 >
-                  Read case study →
+                  Read case study
                 </Link>
               </div>
             </article>

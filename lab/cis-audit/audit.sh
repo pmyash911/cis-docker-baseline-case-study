@@ -1,5 +1,10 @@
 #!/bin/sh
-# ycc-cis-audit — read-only CIS Docker baseline checks.
+# ycc-cis-audit — read-only CIS-aligned container baseline checks.
+#
+# 13 CIS-aligned controls (internal identifiers AUD-01..AUD-13) plus one
+# separate connectivity check (HOST 000, not a CIS control). The AUD-xx ids are
+# Yalgar's own labels grouped by CIS Docker Benchmark area; they are not
+# verified CIS rule numbers and this is not a certifying CIS assessment.
 #
 # Zero dependencies beyond the docker CLI and coreutils. It does NOT change the
 # host or the daemon: it inspects daemon config, permissions, audit rules, and
@@ -12,17 +17,18 @@
 #   ./audit.sh --daemon-config ./weak-daemon.json
 #   ./audit.sh --no-fail-exit           # always exit 0 (for demo runs)
 #
-# Exit codes: 0 = no failures, 1 = at least one FAIL, 2 = usage error.
+# Exit codes: 0 = no failures, 1 = at least one FAIL (connectivity included),
+# 2 = usage error.
 set -u
 
-VERSION="1.0.0"
+VERSION="2.0.0"
 JSON=0
 FAIL_EXIT=1
 OUT_DIR=""
 DAEMON_CONFIG="/etc/docker/daemon.json"
 
 usage() {
-  sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//'
   exit 2
 }
 
@@ -44,6 +50,7 @@ RESULTS=$(mktemp "${TMPDIR:-/tmp}/cis-audit.XXXXXX") || exit 2
 trap 'rm -f "$RESULTS"' EXIT INT TERM
 
 PASS=0; FAIL=0; WARN=0; NA=0; TOTAL=0
+CONN_STATUS="FAIL"; CONN_EVIDENCE="connectivity check not run"
 OS=$(uname -s 2>/dev/null || echo unknown)
 KERNEL=$(uname -r 2>/dev/null || echo unknown)
 HOSTNAME_VALUE=$(hostname 2>/dev/null || echo unknown)
@@ -57,7 +64,7 @@ escape() {
 }
 
 record() {
-  id="$1"; title="$2"; level="$3"; status="$4"; evidence="$5"
+  id="$1"; title="$2"; area="$3"; status="$4"; evidence="$5"
   TOTAL=$((TOTAL + 1))
   case "$status" in
     PASS) PASS=$((PASS + 1)) ;;
@@ -65,7 +72,7 @@ record() {
     WARN) WARN=$((WARN + 1)) ;;
     *)    NA=$((NA + 1)) ;;
   esac
-  printf '%s\t%s\t%s\t%s\t%s\n' "$id" "$title" "$level" "$status" "$evidence" >> "$RESULTS"
+  printf '%s\t%s\t%s\t%s\t%s\n' "$id" "$title" "$area" "$status" "$evidence" >> "$RESULTS"
 }
 
 file_mode() {
@@ -95,35 +102,40 @@ inspect_all() {
 
 ##### Host information ########################################################
 
+# Connectivity is reported separately: it is a precondition for the runtime
+# checks, not one of the 13 CIS-aligned controls, and it is never counted in the
+# CIS summary.
 if [ "$DOCKER_OK" -eq 1 ]; then
-  record "HOST 000" "Docker daemon reachable" "Info" "PASS" "server $DOCKER_VERSION on $OS/$KERNEL"
+  CONN_STATUS="PASS"
+  CONN_EVIDENCE="server $DOCKER_VERSION on $OS/$KERNEL"
 else
-  record "HOST 000" "Docker daemon reachable" "Info" "FAIL" "docker CLI cannot reach a daemon"
+  CONN_STATUS="FAIL"
+  CONN_EVIDENCE="docker CLI cannot reach a daemon"
 fi
 
 ##### Section 1 — Host configuration ##########################################
 
 if [ "$OS" != "Linux" ]; then
-  record "CIS 1.1.1" "Host filesystem auditing (auditd)" "Level 1" "N/A" "host is $OS; auditd rules are Linux-only"
+  record "AUD-01" "Host filesystem auditing (auditd)" "Host" "N/A" "host is $OS; auditd rules are Linux-only"
 elif ! command -v auditctl >/dev/null 2>&1; then
-  record "CIS 1.1.1" "Host filesystem auditing (auditd)" "Level 1" "N/A" "auditd is not installed"
+  record "AUD-01" "Host filesystem auditing (auditd)" "Host" "N/A" "auditd is not installed"
 elif grep -rqs "docker" /etc/audit/rules.d /etc/audit/audit.rules 2>/dev/null; then
-  record "CIS 1.1.1" "Host filesystem auditing (auditd)" "Level 1" "PASS" "docker audit rules present under /etc/audit"
+  record "AUD-01" "Host filesystem auditing (auditd)" "Host" "PASS" "docker audit rules present under /etc/audit"
 else
-  record "CIS 1.1.1" "Host filesystem auditing (auditd)" "Level 1" "FAIL" "no docker path rules found in auditd config"
+  record "AUD-01" "Host filesystem auditing (auditd)" "Host" "FAIL" "no docker path rules found in auditd config"
 fi
 
 if [ "$OS" != "Linux" ]; then
-  record "CIS 1.1.2" "Separate partition for /var/lib/docker" "Level 2" "N/A" "host is $OS"
+  record "AUD-02" "Separate partition for /var/lib/docker" "Host" "N/A" "host is $OS"
 elif command -v findmnt >/dev/null 2>&1; then
   target=$(findmnt -no TARGET /var/lib/docker 2>/dev/null)
   if [ -n "$target" ] && [ "$target" != "/" ]; then
-    record "CIS 1.1.2" "Separate partition for /var/lib/docker" "Level 2" "PASS" "mounted at $target"
+    record "AUD-02" "Separate partition for /var/lib/docker" "Host" "PASS" "mounted at $target"
   else
-    record "CIS 1.1.2" "Separate partition for /var/lib/docker" "Level 2" "FAIL" "container storage shares the root filesystem"
+    record "AUD-02" "Separate partition for /var/lib/docker" "Host" "FAIL" "container storage shares the root filesystem"
   fi
 else
-  record "CIS 1.1.2" "Separate partition for /var/lib/docker" "Level 2" "N/A" "findmnt unavailable"
+  record "AUD-02" "Separate partition for /var/lib/docker" "Host" "N/A" "findmnt unavailable"
 fi
 
 if [ -f "$DAEMON_CONFIG" ]; then
@@ -133,32 +145,32 @@ if [ -f "$DAEMON_CONFIG" ]; then
   case "$perms" in
     600|640|644)
       if [ "$owner" = "root" ]; then
-        record "CIS 1.1.3" "Daemon config file permissions" "Level 1" "PASS" "$DAEMON_CONFIG is $perms owned by $owner"
+        record "AUD-03" "Daemon config file permissions" "Host" "PASS" "$DAEMON_CONFIG is $perms owned by $owner"
       else
-        record "CIS 1.1.3" "Daemon config file permissions" "Level 1" "FAIL" "$DAEMON_CONFIG is $perms owned by $owner"
+        record "AUD-03" "Daemon config file permissions" "Host" "FAIL" "$DAEMON_CONFIG is $perms owned by $owner"
       fi ;;
-    *) record "CIS 1.1.3" "Daemon config file permissions" "Level 1" "FAIL" "$DAEMON_CONFIG is $perms (expected 600/640/644)" ;;
+    *) record "AUD-03" "Daemon config file permissions" "Host" "FAIL" "$DAEMON_CONFIG is $perms (expected 600/640/644)" ;;
   esac
 else
-  record "CIS 1.1.3" "Daemon config file permissions" "Level 1" "N/A" "no $DAEMON_CONFIG on this host"
+  record "AUD-03" "Daemon config file permissions" "Host" "N/A" "no $DAEMON_CONFIG on this host"
 fi
 
 ##### Section 2 — Daemon configuration ########################################
 
 if [ -f "$DAEMON_CONFIG" ] && grep -q '"default-ulimits"' "$DAEMON_CONFIG" 2>/dev/null; then
-  record "CIS 2.1.4" "Default ulimit enforcement" "Level 1" "PASS" "default-ulimits is configured"
+  record "AUD-04" "Default ulimit enforcement" "Daemon" "PASS" "default-ulimits is configured"
 else
-  record "CIS 2.1.4" "Default ulimit enforcement" "Level 1" "FAIL" "default-ulimits is missing from daemon config"
+  record "AUD-04" "Default ulimit enforcement" "Daemon" "FAIL" "default-ulimits is missing from daemon config"
 fi
 
 if [ -f "$DAEMON_CONFIG" ] && grep -Eq '"hosts"[^]]*"tcp://' "$DAEMON_CONFIG" 2>/dev/null; then
   if grep -q '"tlsverify"' "$DAEMON_CONFIG" 2>/dev/null; then
-    record "CIS 2.2.1" "Remote API protected by TLS" "Level 1" "PASS" "TCP host configured with tlsverify"
+    record "AUD-05" "Remote API protected by TLS" "Daemon" "PASS" "TCP host configured with tlsverify"
   else
-    record "CIS 2.2.1" "Remote API protected by TLS" "Level 1" "FAIL" "TCP host configured without tlsverify"
+    record "AUD-05" "Remote API protected by TLS" "Daemon" "FAIL" "TCP host configured without tlsverify"
   fi
 else
-  record "CIS 2.2.1" "Remote API protected by TLS" "Level 1" "PASS" "no remote TCP host configured"
+  record "AUD-05" "Remote API protected by TLS" "Daemon" "PASS" "no remote TCP host configured"
 fi
 
 ##### Section 3 — Daemon file permissions #####################################
@@ -167,11 +179,11 @@ if [ -S /var/run/docker.sock ]; then
   mode=$(file_mode /var/run/docker.sock)
   perms=$(printf '%s' "$mode" | awk '{print $1}')
   case "$perms" in
-    660|600) record "CIS 3.3.6" "Docker socket permissions" "Level 1" "PASS" "/var/run/docker.sock is $perms" ;;
-    *) record "CIS 3.3.6" "Docker socket permissions" "Level 1" "FAIL" "/var/run/docker.sock is $perms (expected 660 or 600)" ;;
+    660|600) record "AUD-06" "Docker socket permissions" "Files" "PASS" "/var/run/docker.sock is $perms" ;;
+    *) record "AUD-06" "Docker socket permissions" "Files" "FAIL" "/var/run/docker.sock is $perms (expected 660 or 600)" ;;
   esac
 else
-  record "CIS 3.3.6" "Docker socket permissions" "Level 1" "N/A" "/var/run/docker.sock not present"
+  record "AUD-06" "Docker socket permissions" "Files" "N/A" "/var/run/docker.sock not present"
 fi
 
 SERVICE_FILE=""
@@ -183,19 +195,19 @@ if [ -n "$SERVICE_FILE" ]; then
   mode=$(file_mode "$SERVICE_FILE")
   perms=$(printf '%s' "$mode" | awk '{print $1}')
   case "$perms" in
-    644|600|640) record "CIS 3.1.1" "docker.service file permissions" "Level 1" "PASS" "$SERVICE_FILE is $perms" ;;
-    *) record "CIS 3.1.1" "docker.service file permissions" "Level 1" "FAIL" "$SERVICE_FILE is $perms (expected 644)" ;;
+    644|600|640) record "AUD-07" "docker.service file permissions" "Files" "PASS" "$SERVICE_FILE is $perms" ;;
+    *) record "AUD-07" "docker.service file permissions" "Files" "FAIL" "$SERVICE_FILE is $perms (expected 644)" ;;
   esac
 else
-  record "CIS 3.1.1" "docker.service file permissions" "Level 1" "N/A" "no systemd docker unit found"
+  record "AUD-07" "docker.service file permissions" "Files" "N/A" "no systemd docker unit found"
 fi
 
 ##### Section 4 — Images and builds ###########################################
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 4.1.2" "Containers run as non-root" "Level 1" "N/A" "daemon unreachable"
+  record "AUD-08" "Containers run as non-root" "Images" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 4.1.2" "Containers run as non-root" "Level 1" "WARN" "no running containers to evaluate"
+  record "AUD-08" "Containers run as non-root" "Images" "WARN" "no running containers to evaluate"
 else
   bad=""
   for id in $(container_ids); do
@@ -206,20 +218,20 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 4.1.2" "Containers run as non-root" "Level 1" "PASS" "all running containers declare a non-root user"
+    record "AUD-08" "Containers run as non-root" "Images" "PASS" "all running containers declare a non-root user"
   else
-    record "CIS 4.1.2" "Containers run as non-root" "Level 1" "FAIL" "root/default user:$bad"
+    record "AUD-08" "Containers run as non-root" "Images" "FAIL" "root/default user:$bad"
   fi
 fi
 
 ##### Section 5 — Runtime ######################################################
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 5.1.1" "AppArmor profile enforced" "Level 1" "N/A" "daemon unreachable"
+  record "AUD-09" "AppArmor profile enforced" "Runtime" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 5.1.1" "AppArmor profile enforced" "Level 1" "WARN" "no running containers to evaluate"
+  record "AUD-09" "AppArmor profile enforced" "Runtime" "WARN" "no running containers to evaluate"
 elif [ "$OS" != "Linux" ] || [ ! -d /sys/module/apparmor ]; then
-  record "CIS 5.1.1" "AppArmor profile enforced" "Level 1" "N/A" "AppArmor not available on this kernel"
+  record "AUD-09" "AppArmor profile enforced" "Runtime" "N/A" "AppArmor not available on this kernel"
 else
   bad=""
   for id in $(container_ids); do
@@ -234,16 +246,16 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 5.1.1" "AppArmor profile enforced" "Level 1" "PASS" "every container has an AppArmor profile"
+    record "AUD-09" "AppArmor profile enforced" "Runtime" "PASS" "every container has an AppArmor profile"
   else
-    record "CIS 5.1.1" "AppArmor profile enforced" "Level 1" "FAIL" "missing/unconfined:$bad"
+    record "AUD-09" "AppArmor profile enforced" "Runtime" "FAIL" "missing/unconfined:$bad"
   fi
 fi
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 5.2.2" "Read-only root filesystem" "Level 1" "N/A" "daemon unreachable"
+  record "AUD-10" "Read-only root filesystem" "Runtime" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 5.2.2" "Read-only root filesystem" "Level 1" "WARN" "no running containers to evaluate"
+  record "AUD-10" "Read-only root filesystem" "Runtime" "WARN" "no running containers to evaluate"
 else
   bad=""
   for id in $(container_ids); do
@@ -254,16 +266,16 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 5.2.2" "Read-only root filesystem" "Level 1" "PASS" "all containers use a read-only root filesystem"
+    record "AUD-10" "Read-only root filesystem" "Runtime" "PASS" "all containers use a read-only root filesystem"
   else
-    record "CIS 5.2.2" "Read-only root filesystem" "Level 1" "FAIL" "writable rootfs:$bad"
+    record "AUD-10" "Read-only root filesystem" "Runtime" "FAIL" "writable rootfs:$bad"
   fi
 fi
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 5.2.3" "Privileged containers" "Level 1" "N/A" "daemon unreachable"
+  record "AUD-11" "Privileged containers" "Runtime" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 5.2.3" "Privileged containers" "Level 1" "WARN" "no running containers to evaluate"
+  record "AUD-11" "Privileged containers" "Runtime" "WARN" "no running containers to evaluate"
 else
   bad=""
   for id in $(container_ids); do
@@ -274,16 +286,16 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 5.2.3" "Privileged containers" "Level 1" "PASS" "no container runs privileged"
+    record "AUD-11" "Privileged containers" "Runtime" "PASS" "no container runs privileged"
   else
-    record "CIS 5.2.3" "Privileged containers" "Level 1" "FAIL" "privileged:$bad"
+    record "AUD-11" "Privileged containers" "Runtime" "FAIL" "privileged:$bad"
   fi
 fi
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 5.1.5" "Memory and CPU limits" "Level 1" "N/A" "daemon unreachable"
+  record "AUD-12" "Memory and CPU limits" "Runtime" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 5.1.5" "Memory and CPU limits" "Level 1" "WARN" "no running containers to evaluate"
+  record "AUD-12" "Memory and CPU limits" "Runtime" "WARN" "no running containers to evaluate"
 else
   bad=""
   for id in $(container_ids); do
@@ -296,16 +308,16 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 5.1.5" "Memory and CPU limits" "Level 1" "PASS" "all containers declare memory and CPU limits"
+    record "AUD-12" "Memory and CPU limits" "Runtime" "PASS" "all containers declare memory and CPU limits"
   else
-    record "CIS 5.1.5" "Memory and CPU limits" "Level 1" "FAIL" "unlimited:$bad"
+    record "AUD-12" "Memory and CPU limits" "Runtime" "FAIL" "unlimited:$bad"
   fi
 fi
 
 if [ "$DOCKER_OK" -eq 0 ]; then
-  record "CIS 5.2.1" "Docker socket not mounted into containers" "Level 2" "N/A" "daemon unreachable"
+  record "AUD-13" "Docker socket not mounted into containers" "Runtime" "N/A" "daemon unreachable"
 elif [ -z "$(container_ids)" ]; then
-  record "CIS 5.2.1" "Docker socket not mounted into containers" "Level 2" "WARN" "no running containers to evaluate"
+  record "AUD-13" "Docker socket not mounted into containers" "Runtime" "WARN" "no running containers to evaluate"
 else
   bad=""
   for id in $(container_ids); do
@@ -315,42 +327,48 @@ else
     fi
   done
   if [ -z "$bad" ]; then
-    record "CIS 5.2.1" "Docker socket not mounted into containers" "Level 2" "PASS" "no container mounts the host docker socket"
+    record "AUD-13" "Docker socket not mounted into containers" "Runtime" "PASS" "no container mounts the host docker socket"
   else
-    record "CIS 5.2.1" "Docker socket not mounted into containers" "Level 2" "FAIL" "socket mounted:$bad"
+    record "AUD-13" "Docker socket not mounted into containers" "Runtime" "FAIL" "socket mounted:$bad"
   fi
 fi
 
 ##### Output ##################################################################
 
 human_report() {
-  printf '\nYalgar CIS Docker baseline audit v%s\n' "$VERSION"
+  printf '\nYalgar CIS-aligned container baseline audit v%s\n' "$VERSION"
   printf 'Host: %s (%s %s) · Docker: %s · %s\n\n' "$HOSTNAME_VALUE" "$OS" "$KERNEL" "$DOCKER_VERSION" "$NOW"
-  printf '%-10s %-42s %-8s %-5s %s\n' "RULE" "CONTROL" "LEVEL" "STATE" "EVIDENCE"
+  printf 'Connectivity check (not a CIS control): %s — %s\n\n' "$CONN_STATUS" "$CONN_EVIDENCE"
+  printf '%-10s %-42s %-8s %-5s %s\n' "ID" "CONTROL" "AREA" "STATE" "EVIDENCE"
   printf '%s\n' "--------------------------------------------------------------------------------------------------------------"
-  while IFS="$(printf '\t')" read -r id title level status evidence; do
-    printf '%-10s %-42s %-8s %-5s %s\n' "$id" "$title" "$level" "$status" "$evidence"
+  while IFS="$(printf '\t')" read -r id title area status evidence; do
+    printf '%-10s %-42s %-8s %-5s %s\n' "$id" "$title" "$area" "$status" "$evidence"
   done < "$RESULTS"
   printf '%s\n' "--------------------------------------------------------------------------------------------------------------"
-  printf 'PASS %d · FAIL %d · WARN %d · N/A %d · TOTAL %d\n\n' "$PASS" "$FAIL" "$WARN" "$NA" "$TOTAL"
-  printf 'Read-only audit. No packages installed, no daemon changes, no persistent agents.\n'
+  printf 'CIS-aligned: PASS %d · FAIL %d · WARN %d · N/A %d · TOTAL %d\n\n' "$PASS" "$FAIL" "$WARN" "$NA" "$TOTAL"
+  printf 'AUD-01..AUD-13 are Yalgar identifiers grouped by CIS Docker Benchmark area, not verified\n'
+  printf 'CIS rule numbers; this is not a certifying CIS assessment. Read-only audit.\n'
 }
 
 json_report() {
   printf '{\n'
   printf '  "tool": "ycc-cis-audit",\n'
   printf '  "version": "%s",\n' "$VERSION"
+  printf '  "framework": "CIS-aligned",\n'
+  printf '  "note": "AUD identifiers are Yalgar'\''s own; not verified CIS rule numbers; not a certifying CIS assessment",\n'
   printf '  "generatedAt": "%s",\n' "$NOW"
   printf '  "host": {"hostname": "%s", "os": "%s", "kernel": "%s", "docker": "%s"},\n' \
     "$(escape "$HOSTNAME_VALUE")" "$(escape "$OS")" "$(escape "$KERNEL")" "$(escape "$DOCKER_VERSION")"
+  printf '  "connectivity": {"id": "HOST 000", "title": "Docker daemon reachable", "status": "%s", "evidence": "%s"},\n' \
+    "$(escape "$CONN_STATUS")" "$(escape "$CONN_EVIDENCE")"
   printf '  "summary": {"pass": %d, "fail": %d, "warn": %d, "na": %d, "total": %d},\n' "$PASS" "$FAIL" "$WARN" "$NA" "$TOTAL"
   printf '  "checks": [\n'
   first=1
-  while IFS="$(printf '\t')" read -r id title level status evidence; do
+  while IFS="$(printf '\t')" read -r id title area status evidence; do
     [ "$first" -eq 0 ] && printf ',\n'
     first=0
-    printf '    {"id": "%s", "title": "%s", "level": "%s", "status": "%s", "evidence": "%s"}' \
-      "$(escape "$id")" "$(escape "$title")" "$(escape "$level")" "$(escape "$status")" "$(escape "$evidence")"
+    printf '    {"id": "%s", "title": "%s", "area": "%s", "status": "%s", "evidence": "%s"}' \
+      "$(escape "$id")" "$(escape "$title")" "$(escape "$area")" "$(escape "$status")" "$(escape "$evidence")"
   done < "$RESULTS"
   printf '\n  ]\n}\n'
 }
@@ -367,7 +385,7 @@ if [ -n "$OUT_DIR" ]; then
   printf 'Wrote %s/audit.json and %s/audit.txt\n' "$OUT_DIR" "$OUT_DIR" >&2
 fi
 
-if [ "$FAIL" -gt 0 ] && [ "$FAIL_EXIT" -eq 1 ]; then
+if { [ "$FAIL" -gt 0 ] || [ "$CONN_STATUS" != "PASS" ]; } && [ "$FAIL_EXIT" -eq 1 ]; then
   exit 1
 fi
 exit 0

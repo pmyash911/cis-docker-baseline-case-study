@@ -22,15 +22,26 @@ export function SiteFooter() {
             aria-label="Footer"
             className="flex flex-wrap items-center gap-x-space-lg gap-y-space-sm"
           >
-            {footerLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {footerLinks.map((link) =>
+              link.href.startsWith("http") ||
+              link.href.startsWith("mailto:") ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
           </nav>
         </div>
 

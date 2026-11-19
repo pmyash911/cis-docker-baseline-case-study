@@ -28,7 +28,7 @@ export function AboutSection() {
             </p>
             <div>
               <Link
-                href="#contact"
+                href="/about"
                 className="font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
               >
                 {about.linkLabel}

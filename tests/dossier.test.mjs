@@ -1,3 +1,7 @@
+import { execFileSync } from "node:child_process";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import assert from "node:assert/strict";
 import { after, before, describe, test } from "node:test";
 
@@ -57,6 +61,67 @@ const validPayload = {
   },
 };
 
+describe("cis-audit harness output", () => {
+  async function runAudit(extraArgs) {
+    const stubDir = await fs.mkdtemp(path.join(os.tmpdir(), "ycc-audit-"));
+    await fs.writeFile(path.join(stubDir, "docker"), "#!/bin/sh\nexit 1\n", { mode: 0o755 });
+    try {
+      const stdout = execFileSync(
+        "sh",
+        [
+          "lab/cis-audit/audit.sh",
+          "--json",
+          "--daemon-config",
+          "lab/cis-audit/weak-daemon.json",
+          ...extraArgs,
+        ],
+        {
+          cwd: process.cwd(),
+          env: {
+            ...process.env,
+            PATH: `${stubDir}${path.delimiter}${process.env.PATH ?? ""}`,
+          },
+          encoding: "utf8",
+        },
+      );
+      return { stdout, status: 0 };
+    } catch (error) {
+      return { stdout: error.stdout ?? "", status: error.status ?? -1 };
+    } finally {
+      await fs.rm(stubDir, { recursive: true, force: true });
+    }
+  }
+
+  test("emits 13 CIS-aligned controls and a separate connectivity record", async () => {
+    const { stdout, status } = await runAudit(["--no-fail-exit"]);
+    assert.equal(status, 0);
+    const json = JSON.parse(stdout);
+
+    assert.equal(json.version, "2.0.0");
+    assert.equal(json.framework, "CIS-aligned");
+    assert.match(json.note, /not a certifying CIS assessment/);
+
+    const expectedIds = Array.from({ length: 13 }, (_, index) => `AUD-${String(index + 1).padStart(2, "0")}`);
+    assert.deepEqual(json.checks.map((check) => check.id), expectedIds);
+    assert.ok(json.checks.every((check) => typeof check.area === "string"));
+    assert.ok(json.checks.every((check) => !Object.hasOwn(check, "level")));
+    assert.ok(!json.checks.some((check) => check.id.startsWith("CIS")));
+
+    assert.equal(json.connectivity.id, "HOST 000");
+    assert.equal(json.connectivity.title, "Docker daemon reachable");
+    assert.equal(json.summary.total, 13);
+    assert.equal(
+      json.summary.pass + json.summary.fail + json.summary.warn + json.summary.na,
+      13,
+    );
+  });
+
+  test("keeps the documented exit codes (1 when a check fails)", async () => {
+    const { status } = await runAudit([]);
+    assert.equal(status, 1);
+  });
+});
+
 describe("case study page", () => {
   test("renders the dossier with all key sections", async () => {
     const response = await fetch(`${server.base}${CASE_STUDY_PATH}`);
@@ -73,11 +138,22 @@ describe("case study page", () => {
     for (const section of ["01 // CONTEXT", "02 // FRAMEWORK", "03 // EVALUATION MATRIX", "04 // ARTIFACTS"]) {
       assert.match(html, new RegExp(section.replace(/\//g, "\\/")));
     }
-    // matrix rows + statuses
-    assert.match(html, /CIS 1\.1\.1/);
-    assert.match(html, /CIS 5\.2\.2/);
+    // matrix rows use our AUD identifiers, labelled CIS-aligned
+    assert.match(html, /AUD-04/);
+    assert.match(html, /AUD-10/);
+    assert.match(html, /CIS-aligned/);
+    assert.match(html, /not a certifying CIS assessment/);
     assert.match(html, /PASS/);
     assert.match(html, /FAIL/);
+    // no unverified CIS rule numbers, benchmark edition, or "production" claims
+    assert.doesNotMatch(html, /CIS \d+\.\d+\.\d+/);
+    assert.doesNotMatch(html, /v1\.6\.0/);
+    assert.doesNotMatch(html, /hardened production|production container|production services|production runtime/);
+    assert.doesNotMatch(html, /14-control/);
+    assert.doesNotMatch(html, /six controls/i);
+    // the 13 CIS-aligned controls are reported separately from the connectivity check
+    assert.match(html, /9\/13/);
+    assert.match(html, /connectivity check/i);
     // dossier form fields
     for (const field of ["req-name", "req-email", "req-org", "req-role", "req-intent"]) {
       assert.match(html, new RegExp(`id="${field}"`));

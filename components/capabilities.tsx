@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { capabilities } from "@/lib/content";
 
 export function Capabilities() {
@@ -16,7 +18,7 @@ export function Capabilities() {
             id="services-heading"
             className="mt-space-xs font-headline-lg text-headline-md text-primary md:text-headline-lg"
           >
-            What we do
+            What I do
           </h2>
         </div>
 
@@ -38,6 +40,15 @@ export function Capabilities() {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-space-lg">
+          <Link
+            href="/capabilities"
+            className="font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+          >
+            Read how each review works
+          </Link>
         </div>
       </div>
     </section>

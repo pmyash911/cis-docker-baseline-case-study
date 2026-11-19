@@ -249,7 +249,7 @@ export async function sendLeadMail(options: {
     content: options.html,
     mail_format: "html",
     // The CRM org from-address is not provisioned; use the user's allowed
-    // sender until a verified domain alias is configured in the CRM.
+    // sender (pmyash911@gmail.com) until a verified yalgar.com alias is added.
     org_email: false,
   };
 

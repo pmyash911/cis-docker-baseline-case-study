@@ -16,7 +16,7 @@ export function Approach() {
             id="approach-heading"
             className="mt-space-xs font-headline-lg text-headline-md text-primary md:text-headline-lg"
           >
-            Our approach
+            My approach
           </h2>
         </div>
 
