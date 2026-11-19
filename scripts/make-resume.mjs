@@ -113,15 +113,15 @@ body {
   background: #ffffff;
   color: var(--body);
   font-family: "Source Sans 3", Helvetica, Arial, sans-serif;
-  font-size: 9.3pt;
-  line-height: 1.36;
+  font-size: 9pt;
+  line-height: 1.3;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.page { padding: 13mm 15mm 10mm; }
+.page { padding: 10mm 13mm 8mm; }
 h1, h2 { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; color: var(--ink); margin: 0; }
 h1 {
-  font-size: 23pt;
+  font-size: 21pt;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -143,7 +143,7 @@ h1 {
   margin: 4mm 0 0;
 }
 .thin { border: 0; border-top: 1px solid var(--line); margin: 4mm 0; }
-section { margin-top: 4mm; }
+section { margin-top: 3mm; }
 h2 {
   font-size: 11pt;
   font-weight: 600;
@@ -152,11 +152,11 @@ h2 {
   border-bottom: 1px solid var(--line);
   margin-bottom: 2.2mm;
 }
-p { margin: 0 0 2.2mm; }
-ul { margin: 0; padding-left: 4.2mm; }
-li { margin-bottom: 1.2mm; }
+p { margin: 0 0 1.8mm; }
+ul { margin: 0; padding-left: 4mm; }
+li { margin-bottom: 0.9mm; }
 li::marker { color: var(--navy); }
-.entry { margin-bottom: 2.6mm; }
+.entry { margin-bottom: 2mm; }
 .entry:last-child { margin-bottom: 0; }
 .entry-head {
   display: flex;
@@ -270,7 +270,7 @@ li::marker { color: var(--navy); }
         <span class="entry-meta">Own lab systems</span>
       </div>
       <ul>
-        <li>Analyzed and remediated header policies, CSP directives, and session termination flaws across five staging environments maintained in my own lab.</li>
+        <li>Analyzed and remediated header policies, CSP directives, and session termination flaws across five staging environments built and maintained in a personal lab.</li>
       </ul>
     </div>
   </section>
