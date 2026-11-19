@@ -33,7 +33,7 @@ export function CaseStudyHero() {
         >
           <Link
             href="/"
-            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant no-underline transition-colors hover:text-primary"
+            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant no-underline hover:text-primary"
           >
             Portfolio
           </Link>
@@ -42,7 +42,7 @@ export function CaseStudyHero() {
           </span>
           <Link
             href="/work"
-            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant no-underline transition-colors hover:text-primary"
+            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant no-underline hover:text-primary"
           >
             Selected work
           </Link>

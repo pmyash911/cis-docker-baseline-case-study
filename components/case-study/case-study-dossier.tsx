@@ -61,7 +61,7 @@ export function CaseStudyDossier({ caseStudyKey }: { caseStudyKey: string }) {
         <div className="mt-space-xl flex items-center justify-between gap-space-md border-t border-surface-container-highest pt-space-md">
           <Link
             href="/work"
-            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md font-semibold text-label-md text-primary underline underline-offset-4 transition-colors hover:text-secondary"
+            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md font-semibold text-label-md text-primary underline underline-offset-4 hover:text-secondary"
           >
             <span>Return to Selected Work</span>
           </Link>

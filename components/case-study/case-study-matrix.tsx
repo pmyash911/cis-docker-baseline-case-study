@@ -97,7 +97,7 @@ export function CaseStudyMatrix() {
             </thead>
             <tbody className="divide-y divide-surface-container-highest font-body-md text-sm">
               {rows.map((row) => (
-                <tr key={row.id} className="transition-colors hover:bg-surface-container-low">
+                <tr key={row.id} className=" hover:bg-surface-container-low">
                   <td className="px-space-md py-space-md font-mono font-semibold text-primary">
                     {row.id}
                   </td>

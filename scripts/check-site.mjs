@@ -253,6 +253,8 @@ async function checkSurface(pages) {
     if (/FILL IN|\[FILL IN\]|Lorem ipsum|TBD/i.test(text)) problems.push(`${url}: placeholder text`);
     if (emoji.test(text)) problems.push(`${url}: emoji`);
     if (/linear-gradient|radial-gradient/i.test(html)) problems.push(`${url}: gradient`);
+    if (/class="[^"]*(?:transition-|animate-|motion-)/.test(html)) problems.push(`${url}: motion utility`);
+    if (/class="[^"]*shadow-/.test(html)) problems.push(`${url}: shadow utility`);
   }
   record("surface", "no placeholder text, emoji or gradients", problems.length === 0,
     problems.slice(0, 5).join(" | "));

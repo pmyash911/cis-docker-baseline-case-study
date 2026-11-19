@@ -148,7 +148,7 @@ export default function AboutPage() {
                       <span className="font-label-md text-label-md uppercase tracking-wider text-outline">
                         {link.label}
                       </span>
-                      <span className="font-body-md text-body-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant">
+                      <span className="font-body-md text-body-md text-primary underline underline-offset-4 hover:text-on-surface-variant">
                         {link.value}
                       </span>
                     </a>
@@ -159,7 +159,7 @@ export default function AboutPage() {
                 For a scoped review,{" "}
                 <Link
                   href="/#contact"
-                  className="text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+                  className="text-primary underline underline-offset-4 hover:text-on-surface-variant"
                 >
                   send a consultation request
                 </Link>

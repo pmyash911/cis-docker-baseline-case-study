@@ -15,7 +15,7 @@ export function BrandLockup({ className }: { className?: string }) {
     <Link
       href="/"
       className={cn(
-        "group inline-flex min-h-[var(--control-min-height)] items-center gap-2.5 no-underline transition-opacity hover:opacity-90",
+        "group inline-flex min-h-[var(--control-min-height)] items-center gap-2.5 no-underline hover:opacity-90",
         className,
       )}
     >

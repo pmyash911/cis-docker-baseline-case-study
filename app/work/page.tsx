@@ -55,7 +55,7 @@ export default function WorkPage() {
                     <h2 className="mb-space-xs font-headline-sm text-headline-sm text-primary md:text-headline-md">
                       <Link
                         href={item.href}
-                        className="transition-colors hover:text-secondary"
+                        className=" hover:text-secondary"
                       >
                         {item.title}
                       </Link>
@@ -75,7 +75,7 @@ export default function WorkPage() {
                     {item.href.startsWith("/work/") ? (
                       <Link
                         href={item.href}
-                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 hover:text-on-surface-variant"
                       >
                         Read the case study
                       </Link>
@@ -84,7 +84,7 @@ export default function WorkPage() {
                         href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(
                           `Brief request: ${item.title}`,
                         )}`}
-                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 hover:text-on-surface-variant"
                       >
                         Request the brief
                       </a>

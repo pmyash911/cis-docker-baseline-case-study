@@ -97,7 +97,7 @@ export function SiteHeader() {
             {navItems.map((item) => {
               const isActive = activeKey === item.key;
               const className = cn(
-                "inline-flex h-full items-center border-b-2 px-1 text-[15px] no-underline transition-colors",
+                "inline-flex h-full items-center border-b-2 px-1 text-[15px] no-underline",
                 isActive
                   ? "border-[#0B2A4A] font-semibold text-[#0B2A4A]"
                   : "border-transparent font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
@@ -127,7 +127,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex h-12 w-12 items-center justify-center rounded-[2px] text-primary transition-colors hover:bg-surface-container-low lg:hidden"
+          className="inline-flex h-12 w-12 items-center justify-center rounded-[2px] text-primary hover:bg-surface-container-low lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -171,7 +171,7 @@ export function SiteHeader() {
             <ul>
               {navItems.map((item) => {
                 const className = cn(
-                  "flex items-center px-1 py-space-md text-[15px] no-underline transition-colors",
+                  "flex items-center px-1 py-space-md text-[15px] no-underline",
                   activeKey === item.key
                     ? "font-semibold text-[#0B2A4A]"
                     : "font-medium text-[#4D4D4D] hover:text-[#0B2A4A]",
@@ -207,7 +207,7 @@ export function SiteHeader() {
             <div className="mt-space-xl border-t border-outline-variant pt-space-lg">
               <a
                 href={siteConfig.consultationHref}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-[2px] bg-primary-container px-space-lg font-label-md text-label-md text-on-primary transition-colors hover:bg-secondary"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-[2px] bg-primary-container px-space-lg font-label-md text-label-md text-on-primary hover:bg-secondary"
               >
                 Request a consultation
               </a>

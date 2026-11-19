@@ -8,7 +8,7 @@ type Status = "idle" | "submitting" | "success" | "error";
 type Delivery = "sent" | "manual" | "none" | "dry-run" | null;
 
 const fieldClass =
-  "h-12 w-full border border-outline-variant bg-surface-container-lowest px-space-md font-body-md text-on-surface transition-colors focus:border-primary focus:outline-none";
+  "h-12 w-full border border-outline-variant bg-surface-container-lowest px-space-md font-body-md text-on-surface focus:border-primary focus:outline-none";
 
 const labelClass = "mb-space-xs block font-label-md text-label-md text-primary";
 
@@ -186,7 +186,7 @@ export function DossierRequestForm({ caseStudy }: { caseStudy: string }) {
           Evaluation Context
         </label>
         <textarea
-          className="w-full border border-outline-variant bg-surface-container-lowest p-space-md font-body-md text-on-surface transition-colors focus:border-primary focus:outline-none"
+          className="w-full border border-outline-variant bg-surface-container-lowest p-space-md font-body-md text-on-surface focus:border-primary focus:outline-none"
           id="req-intent"
           name="intent"
           placeholder="Briefly specify intended application, compliance scope, or prospective advisory evaluation..."
@@ -197,7 +197,7 @@ export function DossierRequestForm({ caseStudy }: { caseStudy: string }) {
 
       <div className="flex flex-col items-center justify-between gap-space-md pt-space-xs sm:flex-row">
         <button
-          className="h-12 w-full cursor-pointer select-none bg-primary px-space-xl font-label-md uppercase tracking-wider text-on-primary transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          className="h-12 w-full cursor-pointer select-none bg-primary px-space-xl font-label-md uppercase tracking-wider text-on-primary hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           type="submit"
           disabled={status === "submitting"}
         >
@@ -219,7 +219,7 @@ export function DossierRequestForm({ caseStudy }: { caseStudy: string }) {
                 </p>
                 <a
                   href={downloadPath}
-                  className="mt-space-sm inline-flex min-h-[var(--control-min-height)] items-center justify-center bg-primary px-space-lg font-label-md uppercase tracking-wider text-on-primary transition-colors hover:bg-secondary"
+                  className="mt-space-sm inline-flex min-h-[var(--control-min-height)] items-center justify-center bg-primary px-space-lg font-label-md uppercase tracking-wider text-on-primary hover:bg-secondary"
                 >
                   Download the dossier (PDF)
                 </a>
