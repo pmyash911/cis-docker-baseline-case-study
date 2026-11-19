@@ -256,7 +256,7 @@ li::marker { color: var(--navy); }
         <span class="entry-title">Web Application Surface Audit &amp; Header Hardening</span>
         <span class="entry-meta">Lab project</span>
       </div>
-      <p>I analyzed and remediated security header policies, CSP directives, and session termination flaws on my own lab systems.</p>
+      <p>I analyzed and remediated security header policies, CSP directives, and session termination flaws across five staging environments that are my own lab systems, not client infrastructure.</p>
     </div>
   </section>
 

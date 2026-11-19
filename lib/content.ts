@@ -150,7 +150,7 @@ export const selectedWork: WorkItem[] = [
     slug: "web-application-surface-audit",
     label: "Lab Project",
     title: "Web Application Surface Audit & Header Hardening",
-    body: "I analyzed and remediated security header policies, CSP directives, and session termination flaws on my own lab systems.",
+    body: "I analyzed and remediated security header policies, CSP directives, and session termination flaws across five staging environments that are my own lab systems, not client infrastructure.",
     href: "/work#web-application-surface-audit",
   },
 ];
