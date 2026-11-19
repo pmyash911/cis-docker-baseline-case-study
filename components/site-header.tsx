@@ -127,37 +127,14 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex h-12 w-12 items-center justify-center rounded-[2px] text-primary hover:bg-surface-container-low lg:hidden"
+          className="inline-flex min-h-[var(--control-min-height)] items-center justify-center rounded-[2px] px-2 text-primary hover:bg-surface-container-low lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {menuOpen ? (
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          ) : (
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <path d="M3 6h18M3 12h18M3 18h18" />
-            </svg>
-          )}
+          <span className="font-label-md text-label-md uppercase tracking-wider">
+            {menuOpen ? "Close" : "Menu"}
+          </span>
         </button>
       </div>
 
