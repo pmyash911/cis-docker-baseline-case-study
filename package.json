@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "next build && node --test tests/*.test.mjs",
     "test:only": "node --test tests/*.test.mjs",
-    "dossier:build": "node scripts/build-dossier.mjs"
+    "dossier:build": "node scripts/build-dossier.mjs",
+    "check": "node scripts/check-site.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.5.0",
@@ -30,8 +31,10 @@
   },
   "devDependencies": {
     "@types/react-dom": "^18.3.0",
+    "axe-core": "^4.14.1",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.0",
+    "html-validate": "^9.7.1",
     "puppeteer-core": "^25.18.1"
   }
 }

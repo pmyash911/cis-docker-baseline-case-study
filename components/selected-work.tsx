@@ -24,7 +24,7 @@ export function SelectedWork() {
           </div>
           <Link
             href="/work"
-            className="font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
           >
             View all projects
           </Link>
@@ -50,7 +50,7 @@ export function SelectedWork() {
               <div className="shrink-0 pt-space-xs">
                 <Link
                   href={item.href}
-                  className="font-label-md text-label-md text-primary transition-colors hover:text-on-surface-variant"
+                  className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
                 >
                   Read case study
                 </Link>

@@ -75,18 +75,18 @@ export default function WorkPage() {
                     {item.href.startsWith("/work/") ? (
                       <Link
                         href={item.href}
-                        className="font-label-md text-label-md text-primary transition-colors hover:text-on-surface-variant"
+                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
                       >
-                        Read the case study →
+                        Read the case study
                       </Link>
                     ) : (
                       <a
                         href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(
                           `Brief request: ${item.title}`,
                         )}`}
-                        className="font-label-md text-label-md text-primary transition-colors hover:text-on-surface-variant"
+                        className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
                       >
-                        Request the brief →
+                        Request the brief
                       </a>
                     )}
                   </div>

@@ -43,7 +43,7 @@ Use only tokens in `tailwind.config.ts`:
 | Section background | `surface` / `surface-container-low` | `#fcf9f8` / `#f6f3f2` |
 | Body text | `on-surface` | `#1c1b1b` |
 | Secondary text | `on-surface-variant` | `#43474e` |
-| Muted text / metadata | `outline` | `#74777f` |
+| Muted text / metadata | `outline` | `#6b6f77` (4.5:1+ on every surface) |
 | Hairlines and table borders | `outline-variant` | `#c4c6cf` |
 | Primary brand | `primary` | `#00152d` |
 | Link / active accent | `secondary` | `#396090` |

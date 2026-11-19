@@ -127,7 +127,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-[2px] text-primary transition-colors hover:bg-surface-container-low lg:hidden"
+          className="inline-flex h-12 w-12 items-center justify-center rounded-[2px] text-primary transition-colors hover:bg-surface-container-low lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
           aria-label={menuOpen ? "Close menu" : "Open menu"}

@@ -1,0 +1,92 @@
+/*
+ * tokens.css — the only values allowed on this site.
+ *
+ * Every colour, type size, spacing step, radius and layout width used by a
+ * component must come from this file (directly, or through the mirrored
+ * Tailwind theme in tailwind.config.ts, which carries the same values).
+ * Nothing else may be introduced by hand: no arbitrary hex codes, no one-off
+ * pixel sizes, no gradients, no shadows.
+ *
+ * Hard limits from DESIGN.md are encoded here as commented invariants.
+ */
+
+:root {
+  /* Colour — light surfaces only. No dark backgrounds anywhere. */
+  --color-primary: #00152d;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #0b2a4a;
+  --color-on-primary-container: #7892b7;
+  --color-secondary: #396090;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #a3c9ff;
+  --color-tertiary: #241000;
+  --color-tertiary-container: #412100;
+
+  --color-surface: #fcf9f8;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f6f3f2;
+  --color-surface-container: #f0eded;
+  --color-surface-container-high: #eae7e7;
+  --color-surface-container-highest: #e5e2e1;
+  --color-on-surface: #1c1b1b;
+  --color-on-surface-variant: #43474e;
+  --color-outline: #6b6f77;
+  --color-outline-variant: #c4c6cf;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+
+  /* Typography — Source Serif 4 headings, Source Sans 3 body. */
+  --font-display: "Source Serif 4", Georgia, serif;
+  --font-body: "Source Sans 3", system-ui, sans-serif;
+
+  --text-display: 3.5rem;      /* 56px */
+  --text-display-leading: 4rem;
+  --text-headline-lg: 2.5rem;  /* 40px */
+  --text-headline-lg-leading: 3rem;
+  --text-headline-md: 1.75rem; /* 28px */
+  --text-headline-md-leading: 2.25rem;
+  --text-headline-sm: 1.25rem; /* 20px */
+  --text-headline-sm-leading: 1.75rem;
+  --text-body-lg: 1.125rem;    /* 18px */
+  --text-body-lg-leading: 1.75rem;
+  --text-body-md: 1rem;        /* 16px */
+  --text-body-md-leading: 1.5rem;
+  --text-label-md: 0.875rem;   /* 14px */
+  --text-label-md-leading: 1.25rem;
+  --text-caption: 0.75rem;     /* 12px */
+  --text-caption-leading: 1rem;
+
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.015em;
+  --tracking-label: 0.04em;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --section-mobile: 3rem;
+  --section-desktop: 6rem;
+  --gutter: 1.5rem;
+  --gutter-desktop: 2rem;
+  --margin-mobile: 1rem;
+  --margin-tablet: 2rem;
+  --margin-desktop: 3rem;
+  --width-content: 1120px;
+
+  /* Radii — 0.25rem default, 2px maximum on interactive or media corners. */
+  --radius-default: 0.25rem;
+  --radius-media: 2px;
+
+  /* Controls */
+  --control-min-height: 48px;   /* every control, mobile included */
+  --touch-target: 48px;
+  --photo-max-width: 320px;     /* About headshot ceiling */
+
+  /* Structure */
+  --border-width: 1px;
+
+  /* Invariants: no --shadow-* token exists, no --gradient-* token exists,
+     and no dark surface token exists. Their absence is deliberate. */
+}

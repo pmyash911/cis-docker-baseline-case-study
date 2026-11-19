@@ -4,8 +4,9 @@
  *
  * Typographic and single-column, per DESIGN.md: Source Serif 4 headings,
  * Source Sans 3 body, navy rules, no photo, no icons, no colour blocks.
- * Facts not supplied (location, founding date, degrees, certifications,
- * prior employment) stay visible as [FILL IN].
+ * Only supplied facts are rendered. Items with no approved wording (location,
+ * founding date, degrees, certifications, prior employment) are omitted
+ * entirely — never left as placeholder text.
  *
  * Uses Node built-ins plus a headless Chrome already on the machine
  * (CHROME_PATH overrides the lookup); no npm packages and no network calls.
@@ -37,15 +38,6 @@ const FACTS = {
   email: "inquiry@yalgar.com",
   linkedin: "https://linkedin.com/in/yash-patelycc",
   github: "https://github.com/pmyash911",
-  location: "[FILL IN]",
-  founded: "[FILL IN]",
-  degree: "[FILL IN]",
-  institution: "[FILL IN]",
-  graduationYear: "[FILL IN]",
-  certifications: "[FILL IN]",
-  priorEmployer: "[FILL IN]",
-  priorRole: "[FILL IN]",
-  priorDates: "[FILL IN]",
 };
 
 const esc = (value) =>
@@ -196,7 +188,7 @@ li::marker { color: var(--navy); }
     <h1>${esc(FACTS.name)}</h1>
     <div class="role">Security, supply chain, and operations consulting</div>
     <div class="contact">
-      ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)} &middot; Location: ${esc(FACTS.location)}
+      ${esc(FACTS.email)} &middot; ${esc(FACTS.linkedin)} &middot; ${esc(FACTS.github)}
     </div>
     <hr class="rule" />
   </header>
@@ -216,22 +208,15 @@ li::marker { color: var(--navy); }
     <div class="entry">
       <div class="entry-head">
         <span class="entry-title">${esc(FACTS.company)} — independent consulting practice</span>
-        <span class="entry-meta">Founded ${esc(FACTS.founded)} – present</span>
+        <span class="entry-meta">Present</span>
       </div>
-      <div class="entry-sub">Security, supply chain, and operations consulting &middot; ${esc(FACTS.location)}</div>
+      <div class="entry-sub">Security, supply chain, and operations consulting</div>
       <ul>
         <li>I assess how systems are actually configured against the NIST Cybersecurity Framework and CIS benchmarks, and turn each gap into a prioritized risk register with an owner and a target date.</li>
         <li>I review third-party suppliers with a transparent scoring model and a structured questionnaire, and write the remediation requirements that come out of it.</li>
         <li>I review web applications for security header, content security policy, session handling, and configuration defects, and give an explicit fix for each finding.</li>
         <li>I keep every engagement fixed-scope, write the report in plain language, and re-test remediated items within 30 days.</li>
       </ul>
-    </div>
-    <div class="entry">
-      <div class="entry-head">
-        <span class="entry-title">Prior employment — ${esc(FACTS.priorEmployer)}</span>
-        <span class="entry-meta">${esc(FACTS.priorDates)}</span>
-      </div>
-      <div class="entry-sub">${esc(FACTS.priorRole)}</div>
     </div>
   </section>
 
@@ -268,16 +253,6 @@ li::marker { color: var(--navy); }
       &middot; session and authentication review &middot; vendor risk questionnaires
       and scoring &middot; remediation planning &middot; technical writing
     </p>
-  </section>
-
-  <section>
-    <h2>Education and credentials</h2>
-    <dl class="facts">
-      <dt>Degree</dt><dd>${esc(FACTS.degree)}</dd>
-      <dt>Institution</dt><dd>${esc(FACTS.institution)}</dd>
-      <dt>Graduation year</dt><dd>${esc(FACTS.graduationYear)}</dd>
-      <dt>Certifications</dt><dd>${esc(FACTS.certifications)}</dd>
-    </dl>
   </section>
 
   <div class="foot">

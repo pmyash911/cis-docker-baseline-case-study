@@ -28,7 +28,7 @@ export function SiteFooter() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                  className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
                 >
                   {link.label}
                 </a>
@@ -36,7 +36,7 @@ export function SiteFooter() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                  className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
                 >
                   {link.label}
                 </Link>

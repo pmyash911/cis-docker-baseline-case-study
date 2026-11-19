@@ -22,7 +22,7 @@ export function ContactBand() {
           <p className="mb-space-xl font-body-md text-body-md text-on-surface-variant">
             {contact.body}{" "}
             <a
-              className="font-body-bold text-primary hover:underline"
+              className="font-body-bold text-primary underline underline-offset-4 hover:text-on-surface-variant"
               href={`mailto:${siteConfig.email}`}
             >
               {siteConfig.email}
@@ -36,7 +36,7 @@ export function ContactBand() {
             <span className="font-body-md text-body-md text-on-surface-variant">
               {contact.directLabel}{" "}
               <strong className="font-body-bold text-primary">
-                <a href={`mailto:${siteConfig.email}`} className="hover:underline">
+                <a href={`mailto:${siteConfig.email}`} className="inline-flex min-h-[var(--control-min-height)] items-center underline underline-offset-4">
                   {siteConfig.email}
                 </a>
               </strong>

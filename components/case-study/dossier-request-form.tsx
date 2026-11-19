@@ -219,7 +219,7 @@ export function DossierRequestForm({ caseStudy }: { caseStudy: string }) {
                 </p>
                 <a
                   href={downloadPath}
-                  className="mt-space-sm inline-flex h-11 items-center justify-center bg-primary px-space-lg font-label-md uppercase tracking-wider text-on-primary transition-colors hover:bg-secondary"
+                  className="mt-space-sm inline-flex min-h-[var(--control-min-height)] items-center justify-center bg-primary px-space-lg font-label-md uppercase tracking-wider text-on-primary transition-colors hover:bg-secondary"
                 >
                   Download the dossier (PDF)
                 </a>

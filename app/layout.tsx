@@ -3,6 +3,7 @@ import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 
 import { Analytics } from "@/components/analytics";
 
+import "./tokens.css";
 import "./globals.css";
 
 const sourceSerif = Source_Serif_4({

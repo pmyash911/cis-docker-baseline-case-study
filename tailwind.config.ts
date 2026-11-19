@@ -54,7 +54,7 @@ const config: Config = {
         "on-surface-variant": "#43474e",
         "inverse-surface": "#313030",
         "inverse-on-surface": "#f3f0ef",
-        outline: "#74777f",
+        outline: "#6b6f77",
         "outline-variant": "#c4c6cf",
         background: "#fcf9f8",
         "on-background": "#1c1b1b",

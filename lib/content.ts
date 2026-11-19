@@ -42,10 +42,6 @@ export const siteConfig = {
   github: "https://github.com/pmyash911",
   resume: "/resume.pdf",
   website: "https://yalgar.com",
-  // Facts not supplied. Left visible on purpose so they are not softened into a claim.
-  location: "[FILL IN]",
-  founded: "[FILL IN]",
-  credentials: "[FILL IN]",
   tagline:
     "Practical security, supply chain, and operations consulting for small and mid-size organizations.",
   consultationHref:
@@ -55,7 +51,7 @@ export const siteConfig = {
 export const navItems: NavItem[] = [
   { key: "services", label: "Services", hash: "#services", href: "#services" },
   { key: "work", label: "Work", hash: "#work", href: "#work" },
-  { key: "about", label: "About", hash: "#about", href: "#about" },
+  { key: "about", label: "About", hash: "#about", href: "/about" },
   {
     key: "capabilities",
     label: "Capabilities",

@@ -48,7 +48,7 @@ export default function PrivacyPage() {
                   correspondence, can be sent to{" "}
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="font-body-bold text-primary hover:underline"
+                    className="font-body-bold text-primary underline underline-offset-4 hover:text-on-surface-variant"
                   >
                     {siteConfig.email}
                   </a>

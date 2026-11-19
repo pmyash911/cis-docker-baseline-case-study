@@ -45,7 +45,7 @@ export function Capabilities() {
         <div className="mt-space-lg">
           <Link
             href="/capabilities"
-            className="font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
+            className="inline-flex min-h-[var(--control-min-height)] items-center font-label-md text-label-md text-primary underline underline-offset-4 transition-colors hover:text-on-surface-variant"
           >
             Read how each review works
           </Link>
