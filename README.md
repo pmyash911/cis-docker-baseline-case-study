@@ -1,148 +1,121 @@
-# Yalgar Consulting — Website & CIS Docker Audit Case Study
+# CIS Docker Baseline Audit — evidence-backed case study
 
-A production marketing site for **Yalgar Consulting LLC**, built with Next.js 14, plus an
-evidence-backed CIS Docker audit case study, a governed dossier-delivery flow, and a
-zero-dependency compliance harness.
+[![CI](https://github.com/pmyash911/cis-docker-baseline-case-study/actions/workflows/ci.yml/badge.svg)](https://github.com/pmyash911/cis-docker-baseline-case-study/actions/workflows/ci.yml)
 
-![Case study page](docs/screenshots/case-study-desktop.png)
+A read-only audit harness with 13 CIS-aligned controls plus a separate connectivity
+check, run against a hardened reference container and a deliberately weak companion
+environment — with raw JSON evidence, a dossier, and a reproducible verification path.
 
-## What's inside
+![Case-study page, desktop](docs/screenshots/case-study-desktop.png)
 
-| Area | What it is |
-|---|---|
-| Marketing site | Homepage, portfolio, privacy, responsive header/footer, editorial design system (Source Serif 4 + Source Sans 3) |
-| Case study | `/work/container-environment-baseline` — the audit narrative, control matrix, artifacts and controlled-release form |
-| Dossier | 9-page evidence PDF generated from measured audit JSON: [docs/dossier/container-environment-baseline.pdf](docs/dossier/container-environment-baseline.pdf) |
-| CIS harness | `lab/cis-audit/audit.sh` — 13 CIS-aligned read-only checks plus a separate connectivity check, JSON output, POSIX shell, no agents |
-| Weak demo | `lab/cis-audit/demo-weak.sh` — deliberately weak containers that prove the checks discriminate |
-| Tests | 13 automated tests (pages, links, dossier API validation, honeypot, rate limit, signed downloads, browser E2E, audit harness) |
-| Delivery flow | Dossier request API → optional CRM lead → signed 72-hour download link (dry-run by default) |
+## Quickstart
 
-## Evidence at a glance
-
-Measured on a Docker Cloud Sandbox (Linux 6.12, aarch64), Docker 29.9.3, Node 22.23.4:
-
-| Check | Result |
-|---|---|
-| Hardened baseline (13 CIS-aligned controls + connectivity check) | **9 PASS · 1 FAIL · 3 N/A** · connectivity PASS |
-| Weak companion environment | **6 FAIL · 4 PASS · 3 N/A** · connectivity PASS — five controls that pass on the reference container flip to FAIL |
-| Automated tests | 13/13 pass (browser E2E included locally) |
-| Container smoke test | 4/4 routes HTTP 200; dossier API dry-run answered |
-| Remaining baseline finding | `AUD-04` — default ulimits not declared at daemon level (severity Low, justified in the dossier) |
-
-N/A means the lab kernel cannot evaluate the control (auditd not installed, AppArmor
-unavailable). It is reported explicitly and never counted as a pass.
-
-Full evidence: [`docs/evidence/`](docs/evidence/) — audit JSONs, run report, test log, HTTP log,
-and the hashed bundle.
-
-## The dossier
-
-[**container-environment-baseline.pdf**](docs/dossier/container-environment-baseline.pdf) — 9 pages:
-executive summary, method, baseline evidence, weak-environment evidence, findings F-01…F-07 with
-remediation, reproducibility manifest, disclosure and limitations.
-
-![Dossier cover](docs/dossier/previews/page-1.png)
-
-Regenerate it from the evidence:
-
-```bash
-npm run dossier:build
-```
-
-## Run the site
+Requires Node 22. The full audit run also needs a Linux host with Docker; on other
+hosts the host-level controls report `N/A` or `WARN` rather than a false pass.
 
 ```bash
 npm ci
-npm run dev          # http://localhost:3000
-npm run build        # production build
-npm start            # production server
+npm run build                   # required before the tests: the suite starts `next start`
+node --test tests/*.test.mjs    # 13 tests
+sh lab/cis-audit/audit.sh --json
 ```
 
-Tests (starts an isolated production server in dry-run mode):
+The harness is read-only: it inspects daemon configuration, file permissions, auditd
+rules and the runtime flags of running containers. It installs nothing and changes
+nothing. Exit codes are `0` (no failures), `1` (a check failed, connectivity included)
+and `2` (usage error); `--no-fail-exit` is available for demos.
 
-```bash
-npm test             # build + 11 tests
-npm run test:only    # tests against an existing build
+Sample `--json` output (abridged; one check per status shown):
+
+```json
+{
+  "tool": "ycc-cis-audit",
+  "version": "2.0.0",
+  "framework": "CIS-aligned",
+  "connectivity": {
+    "id": "HOST 000",
+    "title": "Docker daemon reachable",
+    "status": "PASS",
+    "evidence": "server 29.9.3 on Linux/6.12.114"
+  },
+  "summary": { "pass": 9, "fail": 1, "warn": 0, "na": 3, "total": 13 },
+  "checks": [
+    { "id": "AUD-01", "title": "Host filesystem auditing (auditd)", "area": "Host", "status": "N/A", "evidence": "auditd is not installed" },
+    { "id": "AUD-04", "title": "Default ulimit enforcement", "area": "Daemon", "status": "FAIL", "evidence": "default-ulimits is missing from daemon config" },
+    { "id": "AUD-10", "title": "Read-only root filesystem", "area": "Runtime", "status": "PASS", "evidence": "all containers use a read-only root filesystem" }
+  ]
+}
 ```
 
-## Run the CIS audit
+`summary` counts the 13 CIS-aligned controls only. `connectivity` is the separate
+daemon-reachability check and is never one of the 13.
 
-```bash
-lab/cis-audit/audit.sh --json --out cis-baseline
-```
+## Results
 
-Read-only: inspects daemon configuration, file permissions, auditd rules and running-container
-flags. It installs nothing and changes nothing.
+Every count below comes from the recorded run under [`docs/evidence/`](docs/evidence/).
 
-Weak demo (Linux + Docker only):
+| Run | 13 CIS-aligned controls | Connectivity check |
+|---|---|---|
+| Hardened reference container | **9 PASS · 1 FAIL · 3 N/A** | PASS |
+| Deliberately weak companion | **6 FAIL · 4 PASS · 3 N/A** | PASS — 5 controls flip from PASS to FAIL |
+| Daemon-config fixture | **3 PASS · 3 FAIL · 6 WARN · 1 N/A** | PASS |
+| Automated tests | **13/13 pass** | — |
 
-```bash
-lab/cis-audit/demo-weak.sh --setup
-lab/cis-audit/audit.sh --json --out cis-weak --no-fail-exit
-lab/cis-audit/demo-weak.sh --cleanup
-```
+The single baseline FAIL is `AUD-04` (default ulimits not declared at daemon level),
+rated Low and justified in the dossier. The five controls that flip between the
+reference and weak environments are `AUD-08` (non-root user), `AUD-10` (read-only
+root filesystem), `AUD-11` (privileged containers), `AUD-12` (memory and CPU limits)
+and `AUD-13` (docker socket mount).
 
-Reproduce the whole evidence pass (build → tests → image → container → audits → bundle):
+## What this is not
 
-```bash
-bash scripts/run-homelab.sh
-```
-
-## Docker
-
-```bash
-docker build -t ycc-site .
-docker run -d --name ycc-site -p 3000:3000 \
-  --read-only --tmpfs /tmp --memory 512m --cpus 0.5 \
-  --security-opt no-new-privileges \
-  -e DOSSIER_DRY_RUN=1 -e DOSSIER_SEND_EMAIL=0 \
-  -e SITE_URL=http://localhost:3000 \
-  -v "$PWD/private:/app/private" ycc-site
-```
-
-The image is multi-stage, runs as a non-root user, and is ~183 MB.
-
-## Dossier delivery flow
-
-```
-form (case-study page)
-  → POST /api/dossier-request        validation · honeypot · rate limit
-  → dossier registry (server-side)   correct PDF per research, never client-trusted
-  → optional CRM lead + note         enabled only with environment credentials
-  → signed 72-hour link (HMAC)       PDF lives outside public/, streamed only with a valid signature
-  → download + audit log
-```
-
-The browser never receives credentials or file paths. The public repo defaults to **dry-run**:
-no CRM writes, no email. Copy [`.env.example`](.env.example) to `.env` and provide your own values
-to enable integrations.
+- **Not a certifying CIS assessment.** A certifying assessment is out of scope here.
+- **Not CIS rule numbers.** The controls are *CIS-aligned*; `AUD-01` … `AUD-13` are
+  our own identifiers, grouped by the areas the CIS Docker Benchmark covers, and no
+  benchmark edition is claimed.
+- **Not a client fleet.** These are lab measurements on a host and containers we
+  control, published with the evidence so the result can be checked.
+- **N/A is never a pass.** When the host cannot evaluate a control (auditd not
+  installed, AppArmor unavailable) the harness reports `N/A` explicitly and excludes
+  it from the pass count.
 
 ## Repository layout
 
-```
-app/                 Next.js routes (home, work, case study, privacy, API)
-components/          design system + case-study sections + dossier form
-lib/                 copy, dossier registry, signing, request handling, integrations
-lab/cis-audit/       audit harness + weak demo + fixtures
-tests/               node:test suite (API + browser) and helpers
-scripts/             run-homelab.sh, build-dossier.mjs
-docs/                dossier PDF, previews, screenshots, evidence
-public/              brand assets, security.txt
-```
+| Path | What it is |
+|---|---|
+| `lab/cis-audit/` | The audit harness, the weak-environment demo and the daemon-config fixture |
+| `docs/evidence/` | Unedited recorded audit JSON, run report, test log and hashed bundle |
+| `docs/dossier/` | The 9-page evidence dossier (PDF) and page previews |
+| `tests/` | 13 automated tests, including harness tests against a stub `docker` binary |
+| `components/case-study/` | Case-study page sections and the dossier request form |
+| `app/` | Next.js routes for the site, including `/work/container-environment-baseline` |
+| `app/api/dossier-request/` | Request intake — server-side validation, honeypot, timing guard, rate limit, HMAC-signed 72-hour download links (dry-run by default) |
+| `lib/`, `scripts/` | Dossier registry, signing and request handling; evidence and verification scripts |
+
+The marketing site is included because the case-study page is part of the live site.
+The audit work is the point; the site is how it is presented.
+
+## The dossier
+
+[**container-environment-baseline.pdf**](docs/dossier/container-environment-baseline.pdf)
+— 9 pages: executive summary, method, baseline evidence, weak-environment evidence,
+findings F-01…F-07 with remediation, reproducibility manifest, disclosure and
+limitations. It is generated from the recorded audit JSON by
+`scripts/build-dossier.mjs`, which fails the build if a printed count does not match
+the evidence.
+
+![Dossier cover](docs/dossier/previews/page-1.png)
+
+Mobile rendering of the case-study page:
+
+![Case-study page, mobile](docs/screenshots/case-study-mobile.png)
 
 ## License
 
-Source is published for review and portfolio purposes. All rights reserved; no license is granted
-for reuse or redistribution. Contact Yalgar Consulting for permissions.
+The code is released under the MIT licence — see [LICENSE](LICENSE).
+Copyright 2026 Yash Patel / Yalgar Consulting LLC.
 
-Contact: inquiry@yalgar.com
-
-## On the CIS attribution
-
-The control set is **CIS-aligned**, not a certified CIS assessment. Each control carries our own
-`AUD-01 … AUD-13` identifier grouped by the area the CIS Docker Benchmark covers; those identifiers
-are not CIS rule numbers and no benchmark edition is claimed. The recorded JSON under
-[`docs/evidence/`](docs/evidence/) is raw v1.0.0 harness output (which still used the older
-`CIS x.y.z` labels); the dossier maps those records to the AUD identifiers without changing any
-status or evidence string.
+The dossier PDF, its page previews, the screenshots and the site copy
+(`docs/dossier/`, `docs/screenshots/`, `app/`, `components/`, `lib/content.ts`) are
+© Yash Patel / Yalgar Consulting LLC and are **not** covered by the MIT licence.
+They are published for review only.

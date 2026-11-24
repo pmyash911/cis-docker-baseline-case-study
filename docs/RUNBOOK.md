@@ -46,7 +46,7 @@ questions. Do not edit source files. Do not use secrets, .env, CRM, email, or pu
 1. Records the environment (OS, kernel, Node, Docker).
 2. Installs dependencies if missing.
 3. Builds the site.
-4. Runs the 11-test suite (browser tests auto-skip without Chrome).
+4. Runs the 13-test suite (browser tests auto-skip without Chrome).
 5. Builds the production image and boots it with hardened flags.
 6. Hits all routes and the dossier API in dry-run.
 7. Runs the read-only CIS baseline audit while the container is running.

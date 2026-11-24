@@ -101,7 +101,6 @@ No additional colours. Status may be expressed with the tokens above plus
 | Brand lockup | Text-only `public/brand/*.svg`, navy on transparent |
 | Favicon | `app/icon.svg`, navy mark |
 | Social preview | `public/og.png`, 1200×630, typographic: paper background, navy rule, serif headline, Source Sans footnote |
-| Resume | `public/resume.pdf`, generated from `scripts/make-resume.mjs`, no photo |
 | Dossier PDF | `docs/dossier/container-environment-baseline.pdf`, same type and palette as the site — no colour blocks, no iconography, no marketing imagery |
 
 ## Anti-patterns (reject in review)

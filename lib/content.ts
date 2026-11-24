@@ -40,8 +40,8 @@ export const siteConfig = {
   email: "inquiry@yalgar.com",
   linkedin: "https://linkedin.com/in/yash-patelycc",
   github: "https://github.com/pmyash911",
-  resume: "/resume.pdf?v=2026-11-19-3",
   website: "https://yalgar.com",
+  location: "Dallas–Fort Worth Metroplex",
   founded: "October 2026",
   credentials:
     "B.S. in Computing and Security Technology (BSCST), Drexel University, 2024; Member, CSCMP",
@@ -197,7 +197,6 @@ export const footerLinks = [
   { label: "Email", href: "mailto:inquiry@yalgar.com" },
   { label: "LinkedIn", href: siteConfig.linkedin },
   { label: "GitHub", href: siteConfig.github },
-  { label: "Resume (PDF)", href: siteConfig.resume },
   { label: "Privacy", href: "/privacy" },
   { label: ".well-known/security.txt", href: "/.well-known/security.txt" },
 ];

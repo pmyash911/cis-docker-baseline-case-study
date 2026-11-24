@@ -248,8 +248,8 @@ export async function sendLeadMail(options: {
     subject: options.subject.slice(0, 240),
     content: options.html,
     mail_format: "html",
-    // The CRM org from-address is not provisioned; use the user's allowed
-    // sender (pmyash911@gmail.com) until a verified yalgar.com alias is added.
+    // The organisation sender address is not provisioned yet; use the
+    // configured account sender until a verified custom-domain alias exists.
     org_email: false,
   };
 

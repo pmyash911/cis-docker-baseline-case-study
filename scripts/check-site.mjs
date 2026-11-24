@@ -7,7 +7,7 @@
  *   2. Link check           (every internal <a href> and asset <img/src|link/href|script/src>)
  *   3. Accessibility         (axe-core WCAG 2.0/2.1 A+AA via headless Chrome)
  *   4. Mobile tap targets    (every control >= 48px tall at 390px width)
- *   5. About-page contract   (title, description, canonical, og:title, og:url, headshot rules)
+ *   5. About-page contract   (title, description, canonical, og:title, og:url, plain-text email link)
  *   6. Public-surface scan   (no placeholder text, no emoji)
  *
  * Usage: npm run build && node scripts/check-site.mjs [--port 4310] [--keep-server]
@@ -35,9 +35,6 @@ const PAGES = [
   "/work/container-environment-baseline",
   "/privacy",
 ];
-
-/* Pages whose markup is validated but which are not navigated to (they redirect). */
-const MARKUP_ONLY_PAGES = ["/resume"];
 
 const results = [];
 const record = (section, name, ok, detail = "") => {
@@ -101,10 +98,6 @@ async function checkLinks(client, pages) {
 /* ----------------------------------------------------------- html validation */
 async function checkHtml(pages) {
   console.log("\n1. HTML validation");
-  for (const extra of MARKUP_ONLY_PAGES) {
-    const res = await fetch(`${BASE}${extra}`);
-    pages = [...pages, [extra, await res.text()]];
-  }
   const { HtmlValidate } = await import("html-validate");
   const hv = new HtmlValidate({
     extends: ["html-validate:recommended"],
@@ -203,25 +196,12 @@ async function checkAbout(browser) {
 
   const meta = await page.evaluate(() => {
     const get = (sel, attr) => document.querySelector(sel)?.getAttribute(attr) ?? null;
-    const img = document.querySelector('img[alt="Yash Patel"]');
-    const cs = img ? getComputedStyle(img) : null;
     return {
       title: document.title,
       description: get('meta[name="description"]', "content"),
       canonical: get('link[rel="canonical"]', "href"),
       ogTitle: get('meta[property="og:title"]', "content"),
       ogUrl: get('meta[property="og:url"]', "content"),
-      img: img
-        ? {
-            alt: img.getAttribute("alt"),
-            width: img.getBoundingClientRect().width,
-            naturalWidth: img.naturalWidth,
-            maxWidth: cs.maxWidth,
-            radius: parseFloat(cs.borderTopLeftRadius),
-            shadow: cs.boxShadow,
-            filter: cs.filter,
-          }
-        : null,
       text: document.body.innerText,
     };
   });
@@ -234,58 +214,11 @@ async function checkAbout(browser) {
   record("about", "og:title present", Boolean(meta.ogTitle), meta.ogTitle);
   record("about", "og:url is https://yalgar.com/about",
     meta.ogUrl === "https://yalgar.com/about", meta.ogUrl);
-  record("about", "headshot present with alt 'Yash Patel'", Boolean(meta.img?.alt === "Yash Patel"));
-  record("about", "headshot max width <= 320px",
-    Boolean(meta.img && meta.img.width <= 320 && meta.img.maxWidth === "320px"),
-    meta.img ? `${Math.round(meta.img.width)}px, max-width ${meta.img.maxWidth}` : "no image");
-  record("about", "headshot corner radius <= 2px",
-    Boolean(meta.img && meta.img.radius <= 2), meta.img ? `${meta.img.radius}px` : "no image");
-  record("about", "headshot has no shadow or filter",
-    Boolean(meta.img && meta.img.shadow === "none" && meta.img.filter === "none"),
-    meta.img ? `shadow=${meta.img.shadow} filter=${meta.img.filter}` : "no image");
   record("about", "email shown as a plain text link",
     meta.text.includes("inquiry@yalgar.com") &&
       Boolean(await page.$('a[href="mailto:inquiry@yalgar.com"]')));
 
   await page.close();
-}
-
-/* ------------------------------------------------- resume social wrapper */
-async function checkResumeWrapper() {
-  console.log("\n7. Resume wrapper (/resume)");
-  const res = await fetch(`${BASE}/resume`, {
-    headers: { "user-agent": "LinkedInBot/1.0" },
-  });
-  const html = await res.text();
-  const tag = (re) => (html.match(re) ?? [])[1] ?? null;
-
-  record("resume-card", "route returns 200 HTML",
-    res.status === 200 && (res.headers.get("content-type") ?? "").includes("text/html"),
-    `status ${res.status}`);
-  record("resume-card", "og:image points at /og-resume.png",
-    tag(/<meta property="og:image" content="([^"]+)"/) === "https://yalgar.com/og-resume.png",
-    tag(/<meta property="og:image" content="([^"]+)"/));
-  record("resume-card", "og:image declares 1200x627",
-    tag(/<meta property="og:image:width" content="([^"]+)"/) === "1200" &&
-      tag(/<meta property="og:image:height" content="([^"]+)"/) === "627");
-  record("resume-card", "og:title present", Boolean(tag(/<meta property="og:title" content="([^"]+)"/)),
-    tag(/<meta property="og:title" content="([^"]+)"/));
-  record("resume-card", "og:description present",
-    Boolean(tag(/<meta property="og:description" content="([^"]+)"/)));
-  record("resume-card", "og:url present",
-    tag(/<meta property="og:url" content="([^"]+)"/) === "https://yalgar.com/resume");
-  record("resume-card", "instant redirect to the PDF",
-    /http-equiv="refresh" content="0; url=\/resume\.pdf/.test(html) &&
-      html.includes("location.replace"));
-
-  // the image must exist and really be 1200x627
-  const img = await fetch(`${BASE}/og-resume.png`);
-  const bytes = Buffer.from(await img.arrayBuffer());
-  const isPng = bytes.subarray(1, 4).toString("ascii") === "PNG";
-  const w = isPng ? bytes.readUInt32BE(16) : 0;
-  const h = isPng ? bytes.readUInt32BE(20) : 0;
-  record("resume-card", "og-resume.png is a 1200x627 PNG",
-    img.status === 200 && isPng && w === 1200 && h === 627, `${w}x${h}`);
 }
 
 /* ----------------------------------------------------- public surface scan */
@@ -328,7 +261,6 @@ try {
   await checkTapTargets(browser);
   await checkAbout(browser);
   await checkSurface(pages);
-  await checkResumeWrapper();
 
   await browser.close();
 

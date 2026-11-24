@@ -38,7 +38,9 @@ export const metadata: Metadata = {
 
 const background = [
   { label: "Name", value: siteConfig.person },
+  { label: "Based in", value: siteConfig.location },
   { label: "Founded", value: siteConfig.founded },
+  { label: "Prior role", value: "Manager at Amazon, August 2024 to August 2025, leading a team of 50 to 100" },
   { label: "Degrees and credentials", value: siteConfig.credentials },
 ];
 
@@ -58,11 +60,6 @@ const contactLinks = [
     value: "github.com/pmyash911",
     href: siteConfig.github,
   },
-  {
-    label: "Resume",
-    value: "resume.pdf",
-    href: siteConfig.resume,
-  },
 ];
 
 export default function AboutPage() {
@@ -75,8 +72,7 @@ export default function AboutPage() {
           className="w-full bg-surface-container-lowest py-section-mobile md:py-section-desktop"
         >
           <div className="mx-auto max-w-[1120px] px-margin md:px-margin-tablet lg:px-margin-desktop">
-            <div className="grid grid-cols-1 gap-space-xl md:grid-cols-[1fr_auto] md:items-start md:gap-space-xl">
-              <div className="max-w-[70ch]">
+            <div className="max-w-[70ch]">
                 <span className="font-label-md text-label-md uppercase tracking-wider text-outline">
                   About
                 </span>
@@ -102,29 +98,16 @@ export default function AboutPage() {
                     and who owns the fix.
                   </p>
                   <p>
+                    Before founding Yalgar I was a manager at Amazon, from
+                    August 2024 to August 2025, leading a team of 50 to 100.
+                  </p>
+                  <p>
                     My public work is lab work. The three case studies on this
                     site are projects I built on systems I control, and I publish
                     the method and the evidence so the result can be checked
                     rather than taken on trust.
                   </p>
                 </div>
-              </div>
-
-              <div className="md:pt-space-xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/brand/yash_headshot.jpeg"
-                  alt="Yash Patel"
-                  width={800}
-                  height={800}
-                  decoding="async"
-                  className="block h-auto w-full"
-                  style={{
-                    maxWidth: "var(--photo-max-width)",
-                    borderRadius: "var(--radius-media)",
-                  }}
-                />
-              </div>
             </div>
           </div>
         </section>

@@ -82,7 +82,6 @@
   /* Controls */
   --control-min-height: 48px;   /* every control, mobile included */
   --touch-target: 48px;
-  --photo-max-width: 320px;     /* About headshot ceiling */
 
   /* Structure */
   --border-width: 1px;
